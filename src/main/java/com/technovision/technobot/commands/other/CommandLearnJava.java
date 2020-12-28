@@ -4,6 +4,8 @@ import com.technovision.technobot.commands.Command;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
+import java.util.Date;
+
 public class CommandLearnJava extends Command{
 
     public CommandLearnJava() {
@@ -21,6 +23,7 @@ public class CommandLearnJava extends Command{
                 .addField("Java Basics & Interactive Environment", "https://www.codecademy.com/learn/learn-java", false)
                 .addField("Full Online Java Course", "https://java-programming.mooc.fi/", false)
                 .setFooter("TechnoVision Discord", "https://i.imgur.com/TzHOnJu.png")
+                .setTimestamp(new Date().toInstant())
                 .setColor(Command.EMBED_COLOR)
                 .build()
         ).queue();

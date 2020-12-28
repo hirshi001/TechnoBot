@@ -1,7 +1,12 @@
 package com.technovision.technobot.listeners;
 
+import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.events.guild.voice.GuildVoiceJoinEvent;
+import net.dv8tion.jda.api.events.guild.voice.GuildVoiceLeaveEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import java.util.HashMap;
@@ -61,5 +66,21 @@ public class ExtrasEventListener extends ListenerAdapter {
         }
 
         if (triggered) COOLDOWN_MAP.put(authorId, System.currentTimeMillis());
+    }
+
+    @Override
+    public void onGuildVoiceJoin(@NotNull GuildVoiceJoinEvent event) {
+        Member member = event.getMember();
+        event.getGuild().getTextChannelById(792982347381342248L).upsertPermissionOverride(member)
+                .setAllow(Permission.VIEW_CHANNEL)
+                .queue();
+    }
+
+    @Override
+    public void onGuildVoiceLeave(@NotNull GuildVoiceLeaveEvent event) {
+        Member member = event.getMember();
+        event.getGuild().getTextChannelById(792982347381342248L).upsertPermissionOverride(member)
+                .setDeny(Permission.VIEW_CHANNEL)
+                .queue();
     }
 }

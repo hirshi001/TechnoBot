@@ -2,6 +2,7 @@ package com.technovision.technobot.listeners;
 
 import com.technovision.technobot.TechnoBot;
 import com.technovision.technobot.logging.AutoModLogger;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -27,8 +28,8 @@ public class AutomodListener extends ListenerAdapter {
             return;
         }
         if (event.getMessage().getMentionedMembers().size() > 0) {
-            if (event.getMessage().getMentionedMembers().contains(event.getGuild().getMemberById(595024631438508070L)) &&
-                !hasRole(event.getMember(), "staff")) {
+            if (event.getMessage().getMentionedMembers().contains(event.getGuild().getMemberById(595024631438508070L))) {
+                if (event.getMember().hasPermission(Permission.KICK_MEMBERS)) { return; }
                 TextChannel channel = event.getGuild().getTextChannelsByName("RULES-AND-INFO", true).get(0);
                 event.getMessage().delete().queue();
                 event.getChannel().sendMessage("<@!" + event.getAuthor().getIdLong() + ">, do not ping TechnoVision! <#" + channel.getId() + ">").queue();

@@ -105,6 +105,18 @@ public class LevelManager extends ListenerAdapter {
                         event.getGuild().addRoleToMember(event.getMember(), legendary).queue();
                     }
                 }
+                if (lvl >= 40) {
+                    Role master = event.getGuild().getRoleById(792916002336669706L);
+                    if (!roles.contains(master)) {
+                        event.getGuild().addRoleToMember(event.getMember(), master).queue();
+                    }
+                }
+                if (lvl >= 50) {
+                    Role godly = event.getGuild().getRoleById(792916668731883530L);
+                    if (!roles.contains(godly)) {
+                        event.getGuild().addRoleToMember(event.getMember(), godly).queue();
+                    }
+                }
             }
             updates.add(new Document("$set", new Document("xp", xp)));
             int totalXP = profile.getInteger("totalXP") + xpIncrease;

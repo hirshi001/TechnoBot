@@ -11,10 +11,12 @@ import java.util.Date;
 
 public class AutoModLogger {
 
+    private final String public_log_channel;
     private final String log_channel;
     private final EmbedBuilder embed;
 
     public AutoModLogger() {
+        public_log_channel = "mod-log";
         log_channel = "auto-moderation";
         embed = new EmbedBuilder();
     }
@@ -47,11 +49,16 @@ public class AutoModLogger {
                 desc += "**Reason:** " + reason;
                 desc += "\n**Moderator:** " + moderator.getAsTag();
                 break;
+            case UNMUTE:
+                embed.setColor(Command.EMBED_COLOR);
+                embed.setTitle("Un-Muted " + offender.getAsTag());
+                desc += "\n**Moderator:** " + moderator.getAsTag();
+                break;
         }
         embed.setThumbnail(offender.getEffectiveAvatarUrl());
         embed.setDescription(desc);
         embed.setTimestamp(new Date().toInstant());
-        guild.getTextChannelsByName(log_channel, true).get(0).sendMessage(embed.build()).queue();
+        guild.getTextChannelsByName(public_log_channel, true).get(0).sendMessage(embed.build()).queue();
         embed.clear();
     }
 
@@ -86,13 +93,8 @@ public class AutoModLogger {
                 desc += "**Channel:** <#" + channel.getIdLong() + ">";
                 desc += "\n**Moderator:** " + offender.getAsTag();
                 break;
-            case UNMUTE:
-                embed.setColor(Command.EMBED_COLOR);
-                embed.setTitle("Un-Muted " + offender.getAsTag());
-                embed.setThumbnail(offender.getEffectiveAvatarUrl());
-                desc += "\n**Moderator:** " + moderator.getAsTag();
-                break;
         }
+        embed.setThumbnail(offender.getEffectiveAvatarUrl());
         embed.setDescription(desc);
         embed.setTimestamp(new Date().toInstant());
         guild.getTextChannelsByName(log_channel, true).get(0).sendMessage(embed.build()).queue();

@@ -63,6 +63,8 @@ public class ExtrasEventListener extends ListenerAdapter {
             event.getChannel().sendMessage(reply).queue();
             event.getMessage().addReaction("\uD83D\uDE20").queue();
             triggered = true;
+        } else if (msg.toLowerCase().contains("forge") && msg.toLowerCase().contains("tutorials")) {
+            event.getChannel().sendMessage("The Forge tutorials have been discontinued, and no support for Forge will be given. #announcements :pushpin:").queue();
         }
 
         if (triggered) COOLDOWN_MAP.put(authorId, System.currentTimeMillis());

@@ -90,11 +90,21 @@ public class CommandKick extends Command {
         }});
         CommandInfractions.infractionConfig.save();
 
+        target.getUser().openPrivateChannel().complete().sendMessage(
+                new EmbedBuilder()
+                        .setColor(Command.ERROR_EMBED_COLOR)
+                        .setTitle("You have been kicked from the TechnoVision Server for: " + reason)
+                        .build())
+                .queue();
+
+
+        String finalReason = reason;
+        Member finalTarget = target;
         event.getChannel().sendMessage(new EmbedBuilder()
                 .setAuthor(target.getUser().getAsTag() + " has been kicked", null, target.getUser().getEffectiveAvatarUrl())
-                .setDescription("**Reason:** " + reason.replaceAll("`","")).build()).queue();
-
-        bot.getAutoModLogger().log(event.getGuild(), event.getTextChannel(), target.getUser(), event.getAuthor(), AutoModLogger.Infraction.KICK, reason);
+                .setDescription("**Reason:** " + reason.replaceAll("`","")).build()).queue(msg -> {
+                    bot.getAutoModLogger().log(event.getGuild(), event.getTextChannel(), finalTarget.getUser(), event.getAuthor(), AutoModLogger.Infraction.KICK, finalReason, msg.getJumpUrl());
+        });
 
         return true;
     }

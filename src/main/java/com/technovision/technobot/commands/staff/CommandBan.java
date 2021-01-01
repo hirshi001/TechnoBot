@@ -75,7 +75,8 @@ public class CommandBan extends Command {
         target.getUser().openPrivateChannel().complete().sendMessage(
                 new EmbedBuilder()
                         .setColor(Command.ERROR_EMBED_COLOR)
-                        .setTitle("You have been banned from the TechnoVision Server for: " + reason)
+                        .setTitle("You Were Banned From the TechnoVision Server!")
+                        .setDescription("**Reason:** " + reason)
                         .build())
                 .queue();
 

@@ -72,9 +72,7 @@ public class AutoPastebinManager extends ListenerAdapter {
                             .build();
 
                     event.getChannel().sendMessage(embed).queue();
-                } catch (NullPointerException e) {
-                    TechnoBot.logger.log(Logger.LogLevel.INFO, e.getMessage());
-                }
+                } catch (NullPointerException ignored) { }
             }
         }
     }

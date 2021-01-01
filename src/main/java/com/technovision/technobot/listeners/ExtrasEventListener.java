@@ -75,7 +75,7 @@ public class ExtrasEventListener extends ListenerAdapter {
             event.getChannel().sendMessage(reply).queue();
             event.getMessage().addReaction("\uD83D\uDE20").queue();
             triggered = true;
-        } else if (msg.toLowerCase().contains("forge") && msg.toLowerCase().contains("tutorials")) {
+        } else if (msg.toLowerCase().contains("forge") && (msg.toLowerCase().contains("tutorials") || msg.toLowerCase().contains("support") || msg.toLowerCase().contains("help"))) {
             event.getChannel().sendMessage("The Forge tutorials have been discontinued, and thus no support for Forge will be given. " + "<#739158890104750160> :pushpin:").queue();
         }
 

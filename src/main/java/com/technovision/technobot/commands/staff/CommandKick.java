@@ -86,6 +86,7 @@ public class CommandKick extends Command {
 
         target.getUser().openPrivateChannel().complete().sendMessage(
                 new EmbedBuilder()
+                        .setColor(Command.ERROR_EMBED_COLOR)
                         .setTitle("You have been kicked from the TechnoVision Server for: " + reason)
                         .build())
                 .queue();

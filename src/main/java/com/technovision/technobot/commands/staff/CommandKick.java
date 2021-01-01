@@ -84,6 +84,13 @@ public class CommandKick extends Command {
 
         CommandInfractions.infractionConfig.save();
 
+        target.getUser().openPrivateChannel().complete().sendMessage(
+                new EmbedBuilder()
+                        .setTitle("You have been kicked from the TechnoVision Server for: " + reason)
+                        .build())
+                .queue();
+
+
         event.getChannel().sendMessage(new EmbedBuilder()
                 .setAuthor(target.getUser().getAsTag() + " has been kicked", null, target.getUser().getEffectiveAvatarUrl())
                 .setDescription("**Reason:** " + reason.replaceAll("`","")).build()).queue();

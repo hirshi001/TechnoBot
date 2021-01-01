@@ -39,7 +39,22 @@ public class ExtrasEventListener extends ListenerAdapter {
             event.getChannel().sendMessage("https://dontasktoask.com/").queue();
             triggered = true;
         } else if (event.getMessage().getMentionedUsers().contains(event.getJDA().getSelfUser())) {
-            event.getChannel().sendMessage("Uhhh, do you need something?").queue();
+            String reply = "";
+            switch (ThreadLocalRandom.current().nextInt(4)) {
+                case 0:
+                    reply = "Uhhh, do you need something?";
+                    break;
+                case 1:
+                    reply = "Hi bestie :P";
+                    break;
+                case 2:
+                    reply = "Gimme a sec I'm busy!";
+                    break;
+                case 3:
+                    reply = "Why do people ping me so much!!! :angry:";
+                    break;
+            }
+            event.getChannel().sendMessage(reply).queue();
             triggered = true;
         } else if (msg.contains("@everyone")) {
             String reply = "";

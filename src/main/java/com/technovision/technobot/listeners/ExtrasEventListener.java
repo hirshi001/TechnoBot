@@ -38,9 +38,6 @@ public class ExtrasEventListener extends ListenerAdapter {
         } else if (msg.startsWith("i need help") && event.getMessage().getContentRaw().split(" ").length < 7) {
             event.getChannel().sendMessage("https://dontasktoask.com/").queue();
             triggered = true;
-        } else if ((msg.contains("1.12")||msg.contains("1.13")||msg.contains("1.14")) && !(msg.contains("port"))) {
-            event.getChannel().sendMessage("This version of Forge is outdated and you will not be given help for it. This is due to forge ending LTS for the version. Update to 1.15+!").queue();
-            triggered = true;
         } else if (event.getMessage().getMentionedUsers().contains(event.getJDA().getSelfUser())) {
             event.getChannel().sendMessage("Uhhh, do you need something?").queue();
             triggered = true;
@@ -64,7 +61,7 @@ public class ExtrasEventListener extends ListenerAdapter {
             event.getMessage().addReaction("\uD83D\uDE20").queue();
             triggered = true;
         } else if (msg.toLowerCase().contains("forge") && msg.toLowerCase().contains("tutorials")) {
-            event.getChannel().sendMessage("The Forge tutorials have been discontinued, and no support for Forge will be given. #announcements :pushpin:").queue();
+            event.getChannel().sendMessage("The Forge tutorials have been discontinued, and thus no support for Forge will be given. " + "<#739158890104750160> :pushpin:").queue();
         }
 
         if (triggered) COOLDOWN_MAP.put(authorId, System.currentTimeMillis());

@@ -1,11 +1,15 @@
 package com.technovision.technobot.commands.economy;
 
+import com.google.common.collect.Sets;
 import com.technovision.technobot.TechnoBot;
 import com.technovision.technobot.commands.Command;
 import com.technovision.technobot.listeners.managers.EconManager;
 import com.technovision.technobot.util.exceptions.InvalidBalanceException;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Set;
 
 public class CommandWithdraw extends Command {
     private final TechnoBot bot;
@@ -70,5 +74,10 @@ public class CommandWithdraw extends Command {
         embed.setDescription(":x: Too few arguments given.\n\nUsage:\n`withdraw <amount>`");
         event.getChannel().sendMessage(embed.build()).queue();
         return true;
+    }
+
+    @Override
+    public @NotNull Set<String> getAliases() {
+        return Sets.newHashSet("with");
     }
 }

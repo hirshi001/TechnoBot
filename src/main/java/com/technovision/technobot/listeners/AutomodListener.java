@@ -41,8 +41,6 @@ public class AutomodListener extends ListenerAdapter {
                 event.getChannel().sendMessage("<@!" + event.getAuthor().getId() + ">, " + "you are not allowed to advertise in this channel! <#" + channel.getId() + ">").queue();
                 LOGGER.log(event.getGuild(), event.getTextChannel(), event.getAuthor(), event.getJDA().getSelfUser(), AutoModLogger.Infraction.INVITE);
             }
-        } else if (message.toLowerCase().contains("forge") && message.toLowerCase().contains("tutorials")) {
-            event.getChannel().sendMessage("The Forge tutorials have been discontinued, and no support for Forge will be given. #announcements :pushpin:").queue();
         }
     }
 

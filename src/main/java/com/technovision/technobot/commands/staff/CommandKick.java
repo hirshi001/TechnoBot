@@ -92,11 +92,13 @@ public class CommandKick extends Command {
                 .queue();
 
 
+        String finalReason = reason;
+        Member finalTarget = target;
         event.getChannel().sendMessage(new EmbedBuilder()
                 .setAuthor(target.getUser().getAsTag() + " has been kicked", null, target.getUser().getEffectiveAvatarUrl())
-                .setDescription("**Reason:** " + reason.replaceAll("`","")).build()).queue();
-
-        bot.getAutoModLogger().log(event.getGuild(), event.getTextChannel(), target.getUser(), event.getAuthor(), AutoModLogger.Infraction.KICK, reason);
+                .setDescription("**Reason:** " + reason.replaceAll("`","")).build()).queue(msg -> {
+                    bot.getAutoModLogger().log(event.getGuild(), event.getTextChannel(), finalTarget.getUser(), event.getAuthor(), AutoModLogger.Infraction.KICK, finalReason, msg.getJumpUrl());
+        });
 
         return true;
     }

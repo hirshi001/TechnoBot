@@ -92,11 +92,13 @@ public class CommandBan extends Command {
                         .build())
                 .queue();
 
+        final Member finalTarget = target;
+        final String finalReason = reason;
         event.getChannel().sendMessage(new EmbedBuilder()
                 .setAuthor(target.getUser().getAsTag() + " has been banned", null, target.getUser().getEffectiveAvatarUrl())
-                .setDescription("**Reason:** " + reason.replaceAll("`", "")).build()).queue();
-
-        bot.getAutoModLogger().log(event.getGuild(), event.getTextChannel(), target.getUser(), event.getAuthor(), AutoModLogger.Infraction.BAN, reason);
+                .setDescription("**Reason:** " + reason.replaceAll("`", "")).build()).queue(msg -> {
+            bot.getAutoModLogger().log(event.getGuild(), event.getTextChannel(), finalTarget.getUser(), event.getAuthor(), AutoModLogger.Infraction.BAN, finalReason, msg.getJumpUrl());
+        });
 
         return true;
     }

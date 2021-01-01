@@ -71,6 +71,13 @@ public class CommandKick extends Command {
             reason = reason.substring(reason.indexOf(" "));
         }
 
+        target.getUser().openPrivateChannel().complete().sendMessage(
+                new EmbedBuilder()
+                        .setColor(Command.ERROR_EMBED_COLOR)
+                        .setTitle("You have been kicked from the TechnoVision Server for: " + reason)
+                        .build())
+                .queue();
+
         target.kick(reason).queue();
 
         final String r = reason;
@@ -81,16 +88,7 @@ public class CommandKick extends Command {
             put("reason", r);
             put("issuer", executor.getIdLong());
         }});
-
         CommandInfractions.infractionConfig.save();
-
-        target.getUser().openPrivateChannel().complete().sendMessage(
-                new EmbedBuilder()
-                        .setColor(Command.ERROR_EMBED_COLOR)
-                        .setTitle("You have been kicked from the TechnoVision Server for: " + reason)
-                        .build())
-                .queue();
-
 
         event.getChannel().sendMessage(new EmbedBuilder()
                 .setAuthor(target.getUser().getAsTag() + " has been kicked", null, target.getUser().getEffectiveAvatarUrl())

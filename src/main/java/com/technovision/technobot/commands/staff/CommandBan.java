@@ -72,6 +72,13 @@ public class CommandBan extends Command {
             reason = reason.substring(reason.indexOf(" "));
         }
 
+        target.getUser().openPrivateChannel().complete().sendMessage(
+                new EmbedBuilder()
+                        .setColor(Command.ERROR_EMBED_COLOR)
+                        .setTitle("You have been banned from the TechnoVision Server for: " + reason)
+                        .build())
+                .queue();
+
         target.ban(0, reason).queue();
 
         final String r = reason;
@@ -84,13 +91,6 @@ public class CommandBan extends Command {
             put("issuer", executor.getIdLong());
         }});
         CommandInfractions.infractionConfig.save();
-
-        target.getUser().openPrivateChannel().complete().sendMessage(
-                new EmbedBuilder()
-                        .setColor(Command.ERROR_EMBED_COLOR)
-                        .setTitle("You have been banned from the TechnoVision Server for: " + reason)
-                        .build())
-                .queue();
 
         event.getChannel().sendMessage(new EmbedBuilder()
                 .setAuthor(target.getUser().getAsTag() + " has been banned", null, target.getUser().getEffectiveAvatarUrl())

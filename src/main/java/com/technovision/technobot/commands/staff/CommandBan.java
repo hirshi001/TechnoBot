@@ -72,6 +72,14 @@ public class CommandBan extends Command {
             reason = reason.substring(reason.indexOf(" "));
         }
 
+        target.getUser().openPrivateChannel().complete().sendMessage(
+                new EmbedBuilder()
+                        .setColor(Command.ERROR_EMBED_COLOR)
+                        .setTitle("You Were Banned From the TechnoVision Server!")
+                        .setDescription("**Reason:** " + reason)
+                        .build())
+                .queue();
+
         target.ban(0, reason).queue();
 
         final String r = reason;
@@ -87,15 +95,18 @@ public class CommandBan extends Command {
 
         target.getUser().openPrivateChannel().complete().sendMessage(
                 new EmbedBuilder()
+                        .setColor(Command.ERROR_EMBED_COLOR)
                         .setTitle("You have been banned from the TechnoVision Server for: " + reason)
                         .build())
                 .queue();
 
+        final Member finalTarget = target;
+        final String finalReason = reason;
         event.getChannel().sendMessage(new EmbedBuilder()
                 .setAuthor(target.getUser().getAsTag() + " has been banned", null, target.getUser().getEffectiveAvatarUrl())
-                .setDescription("**Reason:** " + reason.replaceAll("`", "")).build()).queue();
-
-        bot.getAutoModLogger().log(event.getGuild(), event.getTextChannel(), target.getUser(), event.getAuthor(), AutoModLogger.Infraction.BAN, reason);
+                .setDescription("**Reason:** " + reason.replaceAll("`", "")).build()).queue(msg -> {
+            bot.getAutoModLogger().log(event.getGuild(), event.getTextChannel(), finalTarget.getUser(), event.getAuthor(), AutoModLogger.Infraction.BAN, finalReason, msg.getJumpUrl());
+        });
 
         return true;
     }

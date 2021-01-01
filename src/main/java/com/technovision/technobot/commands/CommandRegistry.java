@@ -10,10 +10,10 @@ import com.technovision.technobot.commands.other.*;
 import com.technovision.technobot.commands.staff.*;
 import com.technovision.technobot.commands.tickets.CommandTicketMessage;
 import com.technovision.technobot.commands.tickets.CommandTicketSettings;
-import com.technovision.technobot.listeners.managers.MusicManager;
 
 /**
  * Registers commands and their execution.
+ *
  * @author TechnoVision
  * @author Sparky
  */
@@ -42,7 +42,7 @@ public class CommandRegistry {
                 new CommandPlay(bot),
                 new CommandQueue(bot.getMusicManager()),
                 new CommandSkip(bot.getMusicManager()),
-                new CommandSkipto(bot.getMusicManager()),
+                new CommandSkipTo(bot.getMusicManager()),
                 new CommandNp(bot.getMusicManager()),
                 new CommandSeek(bot.getMusicManager()),
                 new CommandLoop(bot.getMusicManager()),
@@ -64,7 +64,7 @@ public class CommandRegistry {
                 new CommandConsider(bot),
                 new CommandImplement(bot),
                 new CommandClear(bot),
-                new CommandUnmute(bot, null),
+                new CommandUnmute(bot),
 
                 // Other
                 new CommandHelp(bot),

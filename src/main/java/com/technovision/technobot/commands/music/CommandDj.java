@@ -16,18 +16,19 @@ public class CommandDj extends Command {
 
     @Override
     public boolean execute(MessageReceivedEvent event, String[] args) {
-        if(musicManager.handlers.get(event.getGuild().getIdLong())==null||musicManager.handlers.get(event.getGuild().getIdLong()).trackScheduler.getQueueCopy().size()==0) {
+        if (musicManager.handlers.get(event.getGuild().getIdLong()) == null || musicManager.handlers.get(event.getGuild().getIdLong()).trackScheduler.getQueueCopy().size() == 0) {
             event.getChannel().sendMessage("There are no songs playing.").queue();
             return true;
         }
         MusicManager.TrackScheduler sch = musicManager.handlers.get(event.getGuild().getIdLong()).trackScheduler;
         EmbedBuilder emb = new EmbedBuilder()
                 .setTitle("DJ Panel")
-                .setDescription("<@!"+event.getAuthor().getId()+">'s DJ Panel")
+                .setDescription("<@!" + event.getAuthor().getId() + ">'s DJ Panel")
                 .setColor(EMBED_COLOR);
         emb = musicManager.assembleEmbed(emb.build(), sch);
         event.getMessage().delete().complete();
-        if(musicManager.djMessages.containsKey(event.getAuthor())) musicManager.djMessages.get(event.getAuthor()).delete().complete();
+        if (musicManager.djMessages.containsKey(event.getAuthor()))
+            musicManager.djMessages.get(event.getAuthor()).delete().complete();
         Message msg = event.getChannel().sendMessage(emb.build()).complete();
         msg.addReaction("⏯").queue();
         msg.addReaction("\uD83D\uDD02").queue();

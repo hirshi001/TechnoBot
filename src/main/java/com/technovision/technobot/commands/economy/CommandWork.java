@@ -27,7 +27,7 @@ public class CommandWork extends Command {
             int amount = ThreadLocalRandom.current().nextInt(230) + 20;
             bot.getEconomy().addMoney(event.getAuthor(), amount, EconManager.Activity.WORK);
             embed.setAuthor(event.getAuthor().getAsTag(), null, event.getAuthor().getEffectiveAvatarUrl());
-            embed.setDescription("You work for the day and receive " + EconManager.SYMBOL +  amount);
+            embed.setDescription("You work for the day and receive " + EconManager.SYMBOL + amount);
             embed.setColor(EconManager.SUCCESS_COLOR);
         } else {
             embed.setAuthor(event.getAuthor().getAsTag(), null, event.getAuthor().getAvatarUrl());

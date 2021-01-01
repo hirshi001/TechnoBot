@@ -2,7 +2,6 @@ package com.technovision.technobot.listeners.managers;
 
 import com.technovision.technobot.TechnoBot;
 import com.technovision.technobot.commands.Command;
-import com.technovision.technobot.commands.economy.CommandWork;
 import com.technovision.technobot.data.Configuration;
 import com.technovision.technobot.logging.Logger;
 import com.technovision.technobot.util.TranscriptUtils;
@@ -19,9 +18,6 @@ import org.json.JSONObject;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
-import java.io.InputStream;
-import java.io.StringBufferInputStream;
-import java.io.StringReader;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -31,37 +27,35 @@ public class TicketManager extends ListenerAdapter {
     private static final long TICKET_ACTION_COOLDOWN = 3000;
     private final Map<Long, Long> TICKET_CREATE_CDMAP = new HashMap<>();
     private final Map<Long, Long> TICKET_ACTION_CDMAP = new HashMap<>();
-    private JSONObject ticketData;
-
     private final TechnoBot bot;
     private final Map<Long, GuildTicketManager> guildMap = new HashMap<>();
     private final Configuration data = new Configuration("data/", "tickets.json") {
         @Override
         public void load() {
             super.load();
-            if(!getJson().has("guilds")) getJson().put("guilds", new JSONArray());
+            if (!getJson().has("guilds")) getJson().put("guilds", new JSONArray());
         }
     };
 
     public TicketManager(final TechnoBot bot) {
         this.bot = bot;
-        for(Object no : data.getJson().getJSONArray("guilds")) {
-            if(!(no instanceof JSONObject)) {
+        for (Object no : data.getJson().getJSONArray("guilds")) {
+            if (!(no instanceof JSONObject)) {
                 bot.getLogger().log(Logger.LogLevel.SEVERE, "Failed to initialize guilds from TicketManager config!");
                 return;
             }
-            ticketData = (JSONObject) no;
+            JSONObject ticketData = (JSONObject) no;
             GuildTicketManager guildTicketManager = new GuildTicketManager(bot, this, bot.getJDA().getGuildById(ticketData.getLong("guildId")), ticketData.getInt("currentId"));
             guildTicketManager.guild.getTextChannelById(ticketData.getLong("reactionMessageChannelId")).retrieveMessageById(ticketData.getLong("reactionMessageId")).queue(message -> guildTicketManager.reactionMessage = message);
-            if(ticketData.has("inboxChannelId") && ticketData.getLong("inboxChannelId") != -1)
+            if (ticketData.has("inboxChannelId") && ticketData.getLong("inboxChannelId") != -1)
                 guildTicketManager.inboxChannel = guildTicketManager.guild.getTextChannelById(ticketData.getLong("inboxChannelId"));
             else {
                 guildTicketManager.inboxChannel = null;
                 ticketData.put("inboxChannelId", -1);
             }
 
-            for(Object no2 : ticketData.getJSONArray("tickets")) {
-                if(!(no2 instanceof JSONObject)) {
+            for (Object no2 : ticketData.getJSONArray("tickets")) {
+                if (!(no2 instanceof JSONObject)) {
                     bot.getLogger().log(Logger.LogLevel.SEVERE, "Failed to initialize guilds from TicketManger config!");
                     return;
                 }
@@ -81,40 +75,41 @@ public class TicketManager extends ListenerAdapter {
         data.save();
     }
 
-    public boolean createReactionMessage(Guild guild, MessageChannel channel) {
-        if(!guildMap.containsKey(guild.getIdLong())) initGuild(guild);
-        return guildMap.get(guild.getIdLong()).createReactionMessage(channel);
+    public void createReactionMessage(Guild guild, MessageChannel channel) {
+        if (!guildMap.containsKey(guild.getIdLong())) initGuild(guild);
+        guildMap.get(guild.getIdLong()).createReactionMessage(channel);
     }
 
-    public boolean setInboxChannel(Guild guild, TextChannel channel) {
-        if(!guildMap.containsKey(guild.getIdLong())) initGuild(guild);
+    public void setInboxChannel(Guild guild, TextChannel channel) {
+        if (!guildMap.containsKey(guild.getIdLong())) initGuild(guild);
         guildMap.get(guild.getIdLong()).inboxChannel = channel;
         guildMap.get(guild.getIdLong()).save();
-        return true;
     }
 
     @Nullable
     public GuildChannel getInboxChannel(Guild guild) {
-        if(!guildMap.containsKey(guild.getIdLong())) initGuild(guild);
+        if (!guildMap.containsKey(guild.getIdLong())) initGuild(guild);
         return guildMap.get(guild.getIdLong()).inboxChannel;
     }
 
     @Override
     public void onGuildMessageReactionAdd(@Nonnull GuildMessageReactionAddEvent event) {
-        if(event.getUser().isBot()) return;
-        if(guildMap.containsKey(event.getGuild().getIdLong())) guildMap.get(event.getGuild().getIdLong()).ticketReactionAdded(event);
+        if (event.getUser().isBot()) return;
+        if (guildMap.containsKey(event.getGuild().getIdLong()))
+            guildMap.get(event.getGuild().getIdLong()).ticketReactionAdded(event);
     }
 
     @Override
     public void onGuildMessageReceived(@Nonnull GuildMessageReceivedEvent event) {
-        if(event.getAuthor().isBot()) return;
-        if(guildMap.containsKey(event.getGuild().getIdLong())) guildMap.get(event.getGuild().getIdLong()).ticketMessageReceived(event);
+        if (event.getAuthor().isBot()) return;
+        if (guildMap.containsKey(event.getGuild().getIdLong()))
+            guildMap.get(event.getGuild().getIdLong()).ticketMessageReceived(event);
     }
 
     public JSONObject getGuildConfigData(long guildId) {
-        for(Object no : data.getJson().getJSONArray("guilds")) {
-            if(!(no instanceof  JSONObject)) {
-                bot.getLogger().log(Logger.LogLevel.WARNING, "Failed to get config data for "+guildId+"!");
+        for (Object no : data.getJson().getJSONArray("guilds")) {
+            if (!(no instanceof JSONObject)) {
+                bot.getLogger().log(Logger.LogLevel.WARNING, "Failed to get config data for " + guildId + "!");
                 return null;
             }
             return (JSONObject) no;
@@ -123,13 +118,13 @@ public class TicketManager extends ListenerAdapter {
     }
 
     private static class GuildTicketManager {
-        private int idCurrent = 0;
         private final TechnoBot bot;
         private final TicketManager ticketManager;
         private final Guild guild;
+        private final Set<Ticket> tickets = new HashSet<>();
+        private int idCurrent;
         private Message reactionMessage;
         private TextChannel inboxChannel;
-        private final Set<Ticket> tickets = new HashSet<Ticket>();
 
         protected GuildTicketManager(final TechnoBot bot, final TicketManager ticketManager, Guild guild, int idCurrent) {
             this.bot = bot;
@@ -147,50 +142,54 @@ public class TicketManager extends ListenerAdapter {
             guild.retrieveMemberById(ticketConf.getLong("openerId")).queue(member -> {
                 Ticket ticket = new Ticket(this, member, bot.getLogger()).id(ticketConf.getInt("ticketId"));
                 ticket.channel = guild.getTextChannelById(ticketConf.getLong("channelId"));
-                if(ticket.channel==null) {
+                if (ticket.channel == null) {
                     bot.getLogger().log(Logger.LogLevel.SEVERE, "Could not find ticket channel!");
                     return;
                 }
                 ticket.channel.retrieveMessageById(ticketConf.getLong("splashMessageId")).queue(message -> {
                     ticket.splashMessage = message;
-                    if(!ticketConf.has("inviteMessageId")) ticketConf.put("inviteMessageId", -1L);
+                    if (!ticketConf.has("inviteMessageId")) ticketConf.put("inviteMessageId", -1L);
                     inboxChannel.retrieveMessageById(ticketConf.getLong("inviteMessageId")).queue(message1 -> {
                         ticket.inviteMessage = message1;
                         ticket.locked = ticketConf.getBoolean("locked");
                         ticket.initialized = true;
                         tickets.add(ticket);
-                    },throwable -> {ticket.locked = ticketConf.getBoolean("locked");ticket.initialized = true;tickets.add(ticket);});
+                    }, throwable -> {
+                        ticket.locked = ticketConf.getBoolean("locked");
+                        ticket.initialized = true;
+                        tickets.add(ticket);
+                    });
                 });
             });
         }
 
-        public boolean createReactionMessage(MessageChannel channel) {
+        public void createReactionMessage(MessageChannel channel) {
             AtomicBoolean ret = new AtomicBoolean(false);
             channel.sendMessage(new EmbedBuilder()
                     .setTitle("\uD83C\uDF9F Create a Support Ticket")
                     .setDescription("Need support, reporting a user, or requesting a ban appeal? Create a ticket by reacting with the emoji below and a staff member will be with you shortly!" +
-                            "\n\n**DO NOT USE THIS FOR CODING SUPPORT!**\n*For help with code, please use a support channel.*" +
-                            "\n\n**To Create a Ticket React With** \uD83C\uDF9F")
+                                    "\n\n**DO NOT USE THIS FOR CODING SUPPORT!**\n*For help with code, please use a support channel.*" +
+                                    "\n\n**To Create a Ticket React With** \uD83C\uDF9F")
                     .setFooter("TechnoVision Discord", "https://i.imgur.com/TzHOnJu.png")
                     .setColor(Command.EMBED_COLOR)
                     .build()
             ).queue(message -> message.addReaction("\uD83C\uDF9F").queue(aVoid -> {
-                    reactionMessage = message;
-                    ret.set(true);
-                    save();
-                }));
-            return ret.get();
+                reactionMessage = message;
+                ret.set(true);
+                save();
+            }));
+            ret.get();
         }
 
         public void ticketReactionAdded(@Nonnull final GuildMessageReactionAddEvent event) {
             long time = System.currentTimeMillis();
-            if(reactionMessage != null && event.getMessageIdLong() == reactionMessage.getIdLong() && ((!ticketManager.TICKET_CREATE_CDMAP.containsKey(event.getUserIdLong())) || time > TICKET_CREATE_COOLDOWN + ticketManager.TICKET_CREATE_CDMAP.get(event.getUserIdLong()))) {
+            if (reactionMessage != null && event.getMessageIdLong() == reactionMessage.getIdLong() && ((!ticketManager.TICKET_CREATE_CDMAP.containsKey(event.getUserIdLong())) || time > TICKET_CREATE_COOLDOWN + ticketManager.TICKET_CREATE_CDMAP.get(event.getUserIdLong()))) {
                 event.getReaction().removeReaction(event.getUser()).queue();
                 createTicket(event.getMember());
                 ticketManager.TICKET_CREATE_CDMAP.put(event.getUserIdLong(), time);
 
-            } else for(Ticket ticket : tickets) {
-                if(ticket.channel.getIdLong() == event.getChannel().getIdLong() || event.getChannel().getIdLong() == inboxChannel.getIdLong() && ((!ticketManager.TICKET_ACTION_CDMAP.containsKey(event.getUserIdLong())) || time > TICKET_ACTION_COOLDOWN + ticketManager.TICKET_ACTION_CDMAP.get(event.getUserIdLong()))) {
+            } else for (Ticket ticket : tickets) {
+                if (ticket.channel.getIdLong() == event.getChannel().getIdLong() || event.getChannel().getIdLong() == inboxChannel.getIdLong() && ((!ticketManager.TICKET_ACTION_CDMAP.containsKey(event.getUserIdLong())) || time > TICKET_ACTION_COOLDOWN + ticketManager.TICKET_ACTION_CDMAP.get(event.getUserIdLong()))) {
                     ticket.reactionAdded(event);
                     ticketManager.TICKET_ACTION_CDMAP.put(event.getUserIdLong(), time);
                 }
@@ -199,8 +198,8 @@ public class TicketManager extends ListenerAdapter {
 
         public void ticketMessageReceived(@Nonnull final GuildMessageReceivedEvent event) {
             long time = System.currentTimeMillis();
-            for(Ticket ticket : tickets) {
-                if(ticket.channel.getIdLong() == event.getChannel().getIdLong() && ((!ticketManager.TICKET_ACTION_CDMAP.containsKey(event.getAuthor().getIdLong())) || time > TICKET_ACTION_COOLDOWN + ticketManager.TICKET_ACTION_CDMAP.get(event.getAuthor().getIdLong()))) {
+            for (Ticket ticket : tickets) {
+                if (ticket.channel.getIdLong() == event.getChannel().getIdLong() && ((!ticketManager.TICKET_ACTION_CDMAP.containsKey(event.getAuthor().getIdLong())) || time > TICKET_ACTION_COOLDOWN + ticketManager.TICKET_ACTION_CDMAP.get(event.getAuthor().getIdLong()))) {
                     ticketManager.TICKET_ACTION_CDMAP.put(event.getAuthor().getIdLong(), time);
                 }
             }
@@ -215,9 +214,10 @@ public class TicketManager extends ListenerAdapter {
                         .setColor(Command.ERROR_EMBED_COLOR)
                         .build());
                 if (saveTranscript) {
+                    //noinspection ResultOfMethodCallIgnored
                     msg.addFile(s.getBytes(), "transcript_ticket-" + ticket.idFormatted() + ".txt");
                 }
-                msg.queue(message -> ((GuildChannel)ticket.channel).delete().queue());
+                msg.queue(message -> ((GuildChannel) ticket.channel).delete().queue());
             });
             save();
         }
@@ -226,12 +226,12 @@ public class TicketManager extends ListenerAdapter {
             JSONObject o = ticketManager.getGuildConfigData(guild.getIdLong());
             o.put("currentId", idCurrent);
             o.put("guildId", guild.getIdLong());
-            if(inboxChannel!=null) o.put("inboxChannelId", inboxChannel.getIdLong());
+            if (inboxChannel != null) o.put("inboxChannelId", inboxChannel.getIdLong());
             o.put("tickets", new JSONArray());
             o.put("reactionMessageId", reactionMessage.getIdLong());
             o.put("reactionMessageChannelId", reactionMessage.getChannel().getIdLong());
             JSONArray ticketArray = o.getJSONArray("tickets");
-            for(Ticket ticket : tickets) {
+            for (Ticket ticket : tickets) {
                 ticketArray.put(new JSONObject() {{
                     put("ticketId", ticket.id);
                     put("subject", ticket.subject);
@@ -240,7 +240,7 @@ public class TicketManager extends ListenerAdapter {
                     put("splashMessageId", ticket.splashMessage.getIdLong());
                     put("locked", ticket.locked);
                     put("openerId", ticket.opener.getIdLong());
-                    if(ticket.inviteMessage != null) put("inviteMessageId", ticket.inviteMessage.getIdLong());
+                    if (ticket.inviteMessage != null) put("inviteMessageId", ticket.inviteMessage.getIdLong());
                 }});
             }
             ticketManager.data.save();
@@ -260,6 +260,7 @@ public class TicketManager extends ListenerAdapter {
         private Message inviteMessage;
         private boolean closing;
         private boolean saveTranscript;
+        private boolean initialized = false;
 
         public Ticket(GuildTicketManager guildTicketManager, Member member, Logger logger) {
             this.logger = logger;
@@ -268,29 +269,28 @@ public class TicketManager extends ListenerAdapter {
 
         }
 
-        private boolean initialized = false;
-
         public Ticket init() {
-            if(initialized) return this;
+            if (initialized) return this;
             initialized = true;
             Guild guild = guildTicketManager.guild;
             Category category = null;
             try {
                 category = guild.getCategoriesByName("\uD83D\uDCE5 Tickets", true).get(0);
-            } catch(Exception ignored) {}
+            } catch (Exception ignored) {
+            }
 
             try {
                 if (category == null) category = guild.createCategory("\uD83D\uDCE5 Tickets").complete(true);
-            } catch(Exception e) {
+            } catch (Exception e) {
                 logger.log(Logger.LogLevel.SEVERE, e.getMessage());
                 e.printStackTrace();
                 return this;
             }
 
             final String finalIdStr = idFormatted();
-            category.createTextChannel("ticket-"+finalIdStr).queue(textChannel -> {
+            category.createTextChannel("ticket-" + finalIdStr).queue(textChannel -> {
                 channel = textChannel;
-                channel.sendMessage("<@!" + opener.getUser().getIdLong() +"> Welcome to your ticket!").queue();
+                channel.sendMessage("<@!" + opener.getUser().getIdLong() + "> Welcome to your ticket!").queue();
                 //Create Ticket Message
                 channel.sendMessage(new EmbedBuilder()
                         .setTitle("Support Ticket ")
@@ -300,14 +300,14 @@ public class TicketManager extends ListenerAdapter {
                         .build()
                 ).queue(message -> {
                     message.addReaction("\uD83D\uDD12").queue();
-                    ((GuildChannel)channel).upsertPermissionOverride(opener).grant(Permission.VIEW_CHANNEL).queue();
-                    ((GuildChannel)channel).upsertPermissionOverride(guild.getRoleById("599344898856189984")).grant(Permission.VIEW_CHANNEL).queue();
+                    ((GuildChannel) channel).upsertPermissionOverride(opener).grant(Permission.VIEW_CHANNEL).queue();
+                    ((GuildChannel) channel).upsertPermissionOverride(guild.getRoleById("599344898856189984")).grant(Permission.VIEW_CHANNEL).queue();
                     splashMessage = message;
                 });
 
                 //Alert Staff
                 guildTicketManager.inboxChannel.sendMessage(new EmbedBuilder()
-                        .setTitle("\uD83D\uDCE8 Ticket #"+idFormatted()+" Opened")
+                        .setTitle("\uD83D\uDCE8 Ticket #" + idFormatted() + " Opened")
                         .setColor(EconManager.SUCCESS_COLOR)
                         .build()
                 ).queue();
@@ -324,74 +324,76 @@ public class TicketManager extends ListenerAdapter {
 
         /**
          * Check if the ticket is in lock mode.
+         *
          * @return Whether or not the ticket is locked.
          */
-        public boolean locked() {
+        public boolean isLocked() {
             return locked;
         }
 
         /**
          * Lock the thread. Essentially just kicks out the original opener.
-         * @return The ticket to allow for method chaining.
+         *
          */
-        public Ticket lock(User user) {
-            if(closing) return this;
+        public void lock(User user) {
+            if (closing) return;
             channel.sendMessage(new EmbedBuilder()
                     .setDescription("Ticket Closed by <@!" + user.getIdLong() + ">")
                     .setColor(0xEAE408)
                     .build()).queue();
             locked = true;
-            ((GuildChannel)channel).upsertPermissionOverride(opener).deny(Permission.VIEW_CHANNEL).queue();
+            ((GuildChannel) channel).upsertPermissionOverride(opener).deny(Permission.VIEW_CHANNEL).queue();
             channel.sendMessage(new EmbedBuilder()
                     .setDescription("\uD83D\uDCD1 Save Transcript" +
-                            "\n\uD83D\uDD13 Reopen Ticket" +
-                            "\n\u26D4 Delete Ticket")
+                                    "\n\uD83D\uDD13 Reopen Ticket" +
+                                    "\n\u26D4 Delete Ticket")
                     .setColor(Command.ERROR_EMBED_COLOR)
                     .build()).queue(message -> {
-                        message.addReaction("\uD83D\uDCD1").queue();
-                        message.addReaction("\uD83D\uDD13").queue();
-                        message.addReaction("\u26D4").queue();
-                        });
+                message.addReaction("\uD83D\uDCD1").queue();
+                message.addReaction("\uD83D\uDD13").queue();
+                message.addReaction("\u26D4").queue();
+            });
             guildTicketManager.save();
-            return this;
         }
 
         /**
          * Unlock the thread. Essentially just lets the original opener into the thread.
-         * @return The ticket to allow for method chaining.
+         *
          */
-        public Ticket unlock(User user) {
-            if(closing) return this;
-            ((GuildChannel)channel).upsertPermissionOverride(opener).grant(Permission.VIEW_CHANNEL).queue();
+        public void unlock(User user) {
+            if (closing) return;
+            ((GuildChannel) channel).upsertPermissionOverride(opener).grant(Permission.VIEW_CHANNEL).queue();
             locked = false;
             channel.sendMessage(new EmbedBuilder()
                     .setDescription("Ticket Reopened by <@!" + user.getIdLong() + ">")
                     .setColor(0xEAE408)
                     .build()).queue();
             guildTicketManager.save();
-            return this;
         }
 
         public String idFormatted() {
-            String idStr = "";
-            for(int i = 0; i < 4-(""+id).length(); i++) idStr += "0";
-            return idStr + id;
+            StringBuilder idStr = new StringBuilder();
+            for (int i = 0; i < 4 - ("" + id).length(); i++) idStr.append("0");
+            return idStr.toString() + id;
         }
 
         /**
          * Runs when a message in this ticket is reacted on.
+         *
          * @param event The reaction event (context).
          */
         public void reactionAdded(@Nonnull final GuildMessageReactionAddEvent event) {
             if (event.getChannel().getIdLong() == channel.getIdLong()) {
                 event.getReaction().removeReaction(event.getUser()).queue();
-                switch(event.getReactionEmote().getEmoji()) {
+                switch (event.getReactionEmote().getEmoji()) {
                     case "\uD83D\uDD12": //Lock
                         lock(event.getUser());
                         break;
                     case "\uD83D\uDD13": //Unlock
                         if (event.getMember().hasPermission(Permission.KICK_MEMBERS)) {
-                            if (locked) { unlock(event.getUser()); }
+                            if (locked) {
+                                unlock(event.getUser());
+                            }
                         }
                         break;
                     case "\u26D4": //Close

@@ -86,21 +86,27 @@ public class EconManager {
     public void withdraw(User user, String amount) throws InvalidBalanceException {
         if (amount.equalsIgnoreCase("all")) {
             JSONObject profile = getProfile(user);
+
             long bank = profile.getLong("bank");
             long newBank = 0;
+
             if (newBank < 0) {
                 throw new InvalidBalanceException();
             }
-            long bal = profile.getLong("balance");
+
             profile.put("bank", newBank);
             profile.put("balance", bank);
+
         } else if (amount.equalsIgnoreCase("half")) {
             JSONObject profile = getProfile(user);
+
             long bank = profile.getLong("bank");
             long newBank = bank / 2;
+
             if (newBank < 0) {
                 throw new InvalidBalanceException();
             }
+
             long bal = profile.getLong("balance");
             profile.put("bank", newBank);
             profile.put("balance", bal / 2);
@@ -109,9 +115,11 @@ public class EconManager {
 
     public long rob(JSONObject robber, JSONObject victim) throws InvalidBalanceException {
         long bal = victim.getLong("balance");
+
         if (bal <= 0) {
             throw new InvalidBalanceException();
         }
+
         long amount = (long) (bal * 0.3);
 
         removeMoney(victim, amount, Activity.NULL);
@@ -123,9 +131,11 @@ public class EconManager {
         long bal = user.getLong("balance");
         long remaining = bal - amount;
         user.put("balance", remaining);
+
         if (activity == Activity.CRIME) {
             user.put("crime-timestamp", System.currentTimeMillis());
         }
+
         economy.save();
     }
 
@@ -139,9 +149,11 @@ public class EconManager {
         JSONObject receiverProfile = getProfile(receiver);
 
         long senderBal = senderProfile.getLong("balance");
+
         if (senderBal - amount < 0) {
             throw new InvalidBalanceException();
         }
+
         senderProfile.put("balance", senderBal - amount);
 
         long receiverBal = receiverProfile.getLong("balance");
@@ -157,6 +169,7 @@ public class EconManager {
     public void addMoney(JSONObject user, long amount, Activity activity) {
         long bal = user.getLong("balance");
         user.put("balance", bal + amount);
+
         switch (activity) {
             case WORK:
                 user.put("work-timestamp", System.currentTimeMillis());
@@ -165,16 +178,19 @@ public class EconManager {
                 user.put("crime-timestamp", System.currentTimeMillis());
                 break;
         }
+
         economy.save();
     }
 
     public JSONObject getProfile(User user) {
         JSONArray profiles = economy.getJson().getJSONArray("users");
+
         for (Object o : profiles) {
             if (((JSONObject) o).getLong("id") == user.getIdLong()) {
                 return (JSONObject) o;
             }
         }
+
         profiles.put(new JSONObject() {{
             put("id", user.getIdLong());
             put("balance", 0);
@@ -183,6 +199,7 @@ public class EconManager {
             put("crime-timestamp", 0);
             put("rob-timestamp", 0);
         }});
+
         economy.save();
         return (JSONObject) profiles.get(profiles.length() - 1);
     }
@@ -191,13 +208,15 @@ public class EconManager {
         long milliseconds = cooldown - (System.currentTimeMillis() - timestamp);
         int hours = (int) ((milliseconds / (1000 * 60 * 60)) % 24);
         int minutes = (int) ((milliseconds / (1000 * 60)) % 60);
+
         if (minutes == 0) {
             return hours + " hours";
         }
+
         return hours + " hours and " + minutes + " minutes";
     }
 
     public enum Activity {
-        WORK, CRIME, NULL;
+        WORK, CRIME, NULL
     }
 }

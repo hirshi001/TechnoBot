@@ -17,8 +17,8 @@ public class CommandTicketSettings extends Command {
 
     @Override
     public boolean execute(MessageReceivedEvent event, String[] args) {
-        if(event.getMember().hasPermission(Permission.KICK_MEMBERS)) {
-            if(args.length==0) {
+        if (event.getMember().hasPermission(Permission.KICK_MEMBERS)) {
+            if (args.length == 0) {
                 GuildChannel inboxChannel = bot.getTicketManager().getInboxChannel(event.getGuild());
                 event.getChannel().sendMessage(new EmbedBuilder()
                         .setTitle("\uD83C\uDF9F Ticket Settings")
@@ -27,13 +27,13 @@ public class CommandTicketSettings extends Command {
                         .build()
                 ).queue();
             } else {
-                if(args[0].equalsIgnoreCase("inbox-channel")) {
+                if (args[0].equalsIgnoreCase("inbox-channel")) {
                     try {
                         bot.getTicketManager().setInboxChannel(event.getGuild(), event.getGuild().getTextChannelsByName(args[1], true).get(0));
                         event.getChannel().sendMessage("\uD83D\uDCE8 Successfully set the channel!").queue();
-                    } catch(StringIndexOutOfBoundsException e) {
+                    } catch (StringIndexOutOfBoundsException e) {
                         event.getChannel().sendMessage("Please specify a channel name!").queue();
-                    } catch(Exception e) {
+                    } catch (Exception e) {
                         event.getChannel().sendMessage("Could not find channel!").queue();
                     }
                 }

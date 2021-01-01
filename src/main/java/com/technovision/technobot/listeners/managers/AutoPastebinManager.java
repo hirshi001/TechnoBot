@@ -1,7 +1,6 @@
 package com.technovision.technobot.listeners.managers;
 
 import com.technovision.technobot.TechnoBot;
-import com.technovision.technobot.logging.Logger;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -33,11 +32,11 @@ public class AutoPastebinManager extends ListenerAdapter {
                 try {
                     Message.Attachment logOrJavaFile = event.getMessage().getAttachments().stream()
                             .filter(attachment -> attachment.getFileExtension().equals("log") ||
-                                    attachment.getFileExtension().equals("java") ||
-                                    attachment.getFileExtension().equals("txt") ||
-                                    attachment.getFileExtension().equals("kt") ||
-                                    attachment.getFileExtension().equals("json") ||
-                                    attachment.getFileExtension().equals("gradle")
+                                                  attachment.getFileExtension().equals("java") ||
+                                                  attachment.getFileExtension().equals("txt") ||
+                                                  attachment.getFileExtension().equals("kt") ||
+                                                  attachment.getFileExtension().equals("json") ||
+                                                  attachment.getFileExtension().equals("gradle")
                             )
                             .findFirst()
                             .orElseThrow(() ->
@@ -72,7 +71,8 @@ public class AutoPastebinManager extends ListenerAdapter {
                             .build();
 
                     event.getChannel().sendMessage(embed).queue();
-                } catch (NullPointerException ignored) { }
+                } catch (NullPointerException ignored) {
+                }
             }
         }
     }

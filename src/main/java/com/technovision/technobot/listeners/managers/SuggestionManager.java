@@ -13,16 +13,14 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.json.JSONObject;
 
 public class SuggestionManager {
-
     public static final String CHANNEL = "SUGGESTIONS";
-    public static final String LOG = "SUGGESTION-LOG";
     private final TechnoBot bot;
 
     private final Configuration suggestions;
 
     public SuggestionManager(final TechnoBot bot) {
         this.bot = bot;
-        suggestions = new Configuration("data/","suggestions.json") {
+        suggestions = new Configuration("data/", "suggestions.json") {
             @Override
             public void load() {
                 super.load();
@@ -50,57 +48,72 @@ public class SuggestionManager {
 
     private void editEmbed(TextChannel channel, String staffName, String[] args, SuggestionResponse response) {
         int num = Integer.parseInt(args[0]);
-        String reason = "No reason given";
+        StringBuilder reason = new StringBuilder("No reason given");
+
         if (args.length > 1) {
-            reason = "";
+            reason = new StringBuilder();
+
             for (int i = 1; i < args.length; i++) {
-                reason += args[i] + " ";
+                reason.append(args[i]).append(" ");
             }
         }
+
         String id = bot.getSuggestionManager().getSuggestion(num);
+
         Message msg = channel.retrieveMessageById(id).complete();
         MessageEmbed embed = msg.getEmbeds().get(0);
-        EmbedBuilder editedEmbed = new EmbedBuilder();
-        editedEmbed.setAuthor(embed.getAuthor().getName(), embed.getUrl(), embed.getAuthor().getIconUrl());
-        editedEmbed.setTitle("Suggestions #" + num + " " + response.getResponse());
-        editedEmbed.setDescription(embed.getDescription());
-        editedEmbed.addField("Reason from " + staffName, reason, false);
-        editedEmbed.setColor(response.getColor());
+
+        EmbedBuilder editedEmbed = new EmbedBuilder()
+                .setAuthor(embed.getAuthor().getName(), embed.getUrl(), embed.getAuthor().getIconUrl())
+                .setTitle("Suggestions #" + num + " " + response.getResponse())
+                .setDescription(embed.getDescription())
+                .addField("Reason from " + staffName, reason.toString(), false)
+                .setColor(response.getColor());
+
         msg.editMessage(editedEmbed.build()).queue();
     }
 
     public void respond(MessageReceivedEvent event, String[] args, SuggestionResponse response) {
-        if(!event.getMember().hasPermission(Permission.MANAGE_SERVER)) {
+        if (!event.getMember().hasPermission(Permission.MANAGE_SERVER)) {
             EmbedBuilder embed = new EmbedBuilder()
                     .setColor(Command.ERROR_EMBED_COLOR)
                     .setDescription(":x: You do not have permission to do that!");
             event.getChannel().sendMessage(embed.build()).queue();
             return;
         }
+
         if (args.length > 0) {
             try {
                 int num = Integer.parseInt(args[0]);
+
                 if (num < 1 || num > getAmount()) {
                     event.getChannel().sendMessage("Could not find a suggestion with that ID.").queue();
                     return;
                 }
+
                 String staffName = event.getAuthor().getAsTag();
                 TextChannel channel = event.getGuild().getTextChannelsByName(SuggestionManager.CHANNEL, true).get(0);
+
                 bot.getSuggestionManager().editEmbed(channel, staffName, args, response);
 
                 EmbedBuilder embed = new EmbedBuilder()
                         .setColor(Command.EMBED_COLOR)
                         .setDescription("Suggestion #" + args[0] + " has been " + response.getResponse().toLowerCase() + "!");
+
                 event.getChannel().sendMessage(embed.build()).queue();
+
                 return;
             } catch (NumberFormatException e) {
                 EmbedBuilder embed = new EmbedBuilder()
                         .setColor(Command.ERROR_EMBED_COLOR)
-                        .setDescription(":x: " + "\"" + args[0] +"\" is not a valid suggestion ID.");
+                        .setDescription(":x: " + "\"" + args[0] + "\" is not a valid suggestion ID.");
+
                 event.getChannel().sendMessage(embed.build()).queue();
+
                 return;
             }
         }
+
         event.getChannel().sendMessage("`" + response.getCommand() + " <id> [reason]`").queue();
     }
 }

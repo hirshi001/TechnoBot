@@ -16,19 +16,21 @@ import java.util.List;
 public class YoutubeManager {
 
     private final String key;
-    private final YouTube youtube;
     private final YouTube.Search.List search;
-    private final TechnoBot bot;
 
     public YoutubeManager(final TechnoBot bot) {
-        this.bot = bot;
         try {
             key = bot.getBotConfig().getJson().getString("youtube-api-key");
-            youtube = new YouTube.Builder(GoogleNetHttpTransport.newTrustedTransport(), new JacksonFactory(),
-                    request -> {}).setApplicationName("technobot-discord-bot").build();
+
+            YouTube youtube = new YouTube.Builder(GoogleNetHttpTransport.newTrustedTransport(), new JacksonFactory(),
+                    request -> {
+                    }).setApplicationName("technobot-discord-bot").build();
+
             List<String> properties = new ArrayList<>();
+
             properties.add("id");
             properties.add("snippet");
+
             search = youtube.search().list(properties);
         } catch (GeneralSecurityException | IOException e) {
             throw new RuntimeException(e);
@@ -43,8 +45,10 @@ public class YoutubeManager {
                     .setKey(key)
                     .setQ(keywords)
                     .execute();
+
             if (searchResponse.getItems().size() == 0) {
-                return null; }
+                return null;
+            }
 
             // Loop through results until you find a video
             for (SearchResult result : searchResponse.getItems()) {
@@ -53,7 +57,9 @@ public class YoutubeManager {
                     return "https://www.youtube.com/watch?v=" + rId.getVideoId();
                 }
             }
-        } catch (IOException ignored) { }
+
+        } catch (IOException ignored) {
+        }
         return null;
     }
 }

@@ -28,6 +28,7 @@ import java.net.URL;
 
 /**
  * Multi-Purpose Bot for TechnoVision Discord.
+ *
  * @author TechnVision
  * @author Sparky
  * @version 0.5
@@ -48,21 +49,21 @@ public class TechnoBot {
     private final TicketManager ticketManager;
     private final AutoPastebinManager autoPastebinManager;
     private final StarboardManager starboardManager;
-    private final Configuration config = new Configuration("data/config/","botconfig.json"){
+    private final Configuration config = new Configuration("data/config/", "botconfig.json") {
         @Override
         public void load() {
             super.load();
-            if(!getJson().has("token")) getJson().put("token", "");
-            if(!getJson().has("guildlogs-webhook")) getJson().put("guildlogs-webhook", "");
-            if(!getJson().has("youtube-api-key")) getJson().put("youtube-api-key", "");
-            if(!getJson().has("mongo-client-uri")) getJson().put("mongo-client-uri", "");
+            if (!getJson().has("token")) getJson().put("token", "");
+            if (!getJson().has("guildlogs-webhook")) getJson().put("guildlogs-webhook", "");
+            if (!getJson().has("youtube-api-key")) getJson().put("youtube-api-key", "");
+            if (!getJson().has("mongo-client-uri")) getJson().put("mongo-client-uri", "");
             if (!getJson().has("github-token")) getJson().put("github-token", "");
         }
     };
 
     /**
-     * Public TechnoBot Constructor.
-     * Initializes the JDABuilder and Bot Registry.
+     * Public TechnoBot Constructor. Initializes the JDABuilder and Bot Registry.
+     *
      * @throws LoginException Malformed bot token.
      */
     public TechnoBot() throws LoginException, InterruptedException {
@@ -76,7 +77,9 @@ public class TechnoBot {
         builder.setStatus(OnlineStatus.ONLINE).setActivity(Activity.watching("TechnoVisionTV"));
         builder.setMemberCachePolicy(MemberCachePolicy.ALL);
         builder.enableIntents(GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_MESSAGE_REACTIONS);
+
         jda = builder.build().awaitReady();
+
         suggestionManager = new SuggestionManager(this);
         youtubeManager = new YoutubeManager(this);
         econManager = new EconManager();
@@ -86,6 +89,40 @@ public class TechnoBot {
         ticketManager = new TicketManager(this);
         starboardManager = new StarboardManager();
         autoPastebinManager = new AutoPastebinManager(this);
+    }
+
+    /**
+     * initialize bot and register listeners.
+     *
+     * @param args ignored
+     */
+    public static void main(String[] args) {
+        TechnoBot bot;
+        try {
+            bot = new TechnoBot();
+            logger = new Logger(bot);
+        } catch (LoginException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        bot.getLogger().log(Logger.LogLevel.INFO, "Bot Starting...");
+        bot.setupImages();
+        GuildMemberEvents.loadJoinMessage();
+
+        new CommandRegistry(bot);
+
+        bot.getRegistry().registerEventListeners(new AutomodListener(bot),
+                new ExtrasEventListener(),
+                bot.musicManager,
+                new GuildLogEventListener(bot),
+                bot.levelManager,
+                new CommandEventListener(bot),
+                new GuildMemberEvents(),
+                bot.starboardManager,
+                bot.ticketManager,
+                bot.autoPastebinManager);
+
+        bot.getRegistry().addListeners(bot.getJDA());
     }
 
     public MusicManager getMusicManager() {
@@ -126,6 +163,7 @@ public class TechnoBot {
 
     /**
      * Accessor for the bot's JSON configuration file.
+     *
      * @return JSON config file.
      */
     public Configuration getBotConfig() {
@@ -134,6 +172,7 @@ public class TechnoBot {
 
     /**
      * Accessor for the console logger.
+     *
      * @return logger.
      */
     public Logger getLogger() {
@@ -142,6 +181,7 @@ public class TechnoBot {
 
     /**
      * Accessor for the JDA API instance.
+     *
      * @return JDA API instance.
      */
     public JDA getJDA() {
@@ -150,6 +190,7 @@ public class TechnoBot {
 
     /**
      * Accessor for the bot registry
+     *
      * @return Bot registry
      */
     public BotRegistry getRegistry() {
@@ -158,6 +199,7 @@ public class TechnoBot {
 
     /**
      * Accessor for the securely stored bot token
+     *
      * @return Bot token
      * @deprecated Probably not a good idea to have a getter for a token ;)
      */
@@ -166,42 +208,27 @@ public class TechnoBot {
         return getBotConfig().getJson().getString("token");
     }
 
-    /** Download and store images needed for rank-card creation */
+    /**
+     * Download and store images needed for rank-card creation
+     */
     private void setupImages() {
         try {
             System.setProperty("http.agent", "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.4; en-US; rv:1.9.2.2");
+
             BufferedImage base = ImageIO.read(new URL("https://i.imgur.com/HktDs1Y.png"));
             BufferedImage outline = ImageIO.read(new URL("https://i.imgur.com/oQhl6yW.png"));
             BufferedImage background = ImageIO.read(new URL("https://i.imgur.com/vGmvhZg.jpg"));
+
             File file = new File("data/images/rankCardOutline.png");
             if (!file.exists()) {
                 file.mkdirs();
             }
+
             ImageProcessor.saveImage("data/images/rankCardBase.png", base);
             ImageProcessor.saveImage("data/images/rankCardOutline.png", outline);
             ImageProcessor.saveImage("data/images/rankCardBackground.png", background);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    /**
-     * initialize bot and register listeners.
-     * @param args ignored
-     */
-    public static void main(String[] args)  {
-        TechnoBot bot;
-        try {
-            bot = new TechnoBot();
-            bot.logger = new Logger(bot);
-        } catch(LoginException | InterruptedException e) { throw new RuntimeException(e); }
-
-        bot.getLogger().log(Logger.LogLevel.INFO, "Bot Starting...");
-        bot.setupImages();
-        GuildMemberEvents.loadJoinMessage();
-
-        new CommandRegistry(bot);
-        bot.getRegistry().registerEventListeners(new AutomodListener(bot), new ExtrasEventListener(), bot.musicManager, new GuildLogEventListener(bot), bot.levelManager, new CommandEventListener(bot), new GuildMemberEvents(), bot.starboardManager, bot.ticketManager, bot.autoPastebinManager);
-        bot.getRegistry().addListeners(bot.getJDA());
     }
 }

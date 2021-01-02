@@ -1,6 +1,7 @@
 package com.technovision.technobot.commands.other;
 
 import com.google.api.client.util.ArrayMap;
+import com.technovision.technobot.TechnoBot;
 import com.technovision.technobot.commands.Command;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.OnlineStatus;
@@ -18,8 +19,8 @@ public class CommandReport extends Command {
 
     private static Map<Member, Long> coolDown = new ArrayMap<>();
 
-    public CommandReport() {
-        super("report","Report a user to a staff","{prefix}report", Command.Category.OTHER);
+    public CommandReport(final TechnoBot bot) {
+        super(bot,"report","Report a user to a staff","{prefix}report", Command.Category.OTHER);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.technovision.technobot.commands.music;
 
+import com.technovision.technobot.TechnoBot;
 import com.technovision.technobot.commands.Command;
 import com.technovision.technobot.listeners.managers.MusicManager;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -7,9 +8,9 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 public class CommandPause extends Command {
     private final MusicManager musicManager;
 
-    public CommandPause(final MusicManager musicManager) {
-        super("pause", "Pauses the player", "{prefix}pause", Command.Category.MUSIC);
-        this.musicManager = musicManager;
+    public CommandPause(final TechnoBot bot) {
+        super(bot,"pause", "Pauses the player", "{prefix}pause", Command.Category.MUSIC);
+        this.musicManager = bot.getMusicManager();
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.technovision.technobot.commands.music;
 
 import com.google.common.collect.Sets;
+import com.technovision.technobot.TechnoBot;
 import com.technovision.technobot.commands.Command;
 import com.technovision.technobot.listeners.managers.MusicManager;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -11,9 +12,9 @@ import java.util.Set;
 public class CommandSkip extends Command {
     private final MusicManager musicManager;
 
-    public CommandSkip(final MusicManager musicManager) {
-        super("skip", "Skips the currently playing song", "{prefix}skip", Command.Category.MUSIC);
-        this.musicManager = musicManager;
+    public CommandSkip(final TechnoBot bot) {
+        super(bot,"skip", "Skips the currently playing song", "{prefix}skip", Command.Category.MUSIC);
+        this.musicManager = bot.getMusicManager();
     }
 
     @Override

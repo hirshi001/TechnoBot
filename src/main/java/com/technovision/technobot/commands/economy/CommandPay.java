@@ -12,11 +12,9 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import java.util.List;
 
 public class CommandPay extends Command {
-    private final TechnoBot bot;
 
     public CommandPay(final TechnoBot bot) {
-        super("pay", "Send cash to a friend", "{prefix}pay [user] <amount>", Category.ECONOMY);
-        this.bot = bot;
+        super(bot,"pay", "Send cash to a friend", "{prefix}pay [user] <amount>", Category.ECONOMY);
     }
 
     @Override

@@ -10,11 +10,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 
 public class CommandHelp extends Command {
-    private final TechnoBot bot;
     
     public CommandHelp(final TechnoBot bot) {
-        super("help", "Displays a list of available commands","{prefix}help [category|command]", Command.Category.OTHER);
-        this.bot = bot;
+        super(bot,"help", "Displays a list of available commands","{prefix}help [category|command]", Command.Category.OTHER);
     }
 
     @Override

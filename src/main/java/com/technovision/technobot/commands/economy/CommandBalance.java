@@ -16,11 +16,9 @@ import java.util.List;
 import java.util.Set;
 
 public class CommandBalance extends Command {
-    private final TechnoBot bot;
 
     public CommandBalance(final TechnoBot bot) {
-        super("balance", "View your account balance", "{prefix}balance", Command.Category.ECONOMY);
-        this.bot = bot;
+        super(bot,"balance", "View your account balance", "{prefix}balance", Command.Category.ECONOMY);
     }
 
     @Override

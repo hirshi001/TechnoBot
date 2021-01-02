@@ -10,11 +10,9 @@ import org.json.JSONObject;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class CommandWork extends Command {
-    private final TechnoBot bot;
 
     public CommandWork(final TechnoBot bot) {
-        super("work", "Work for some cash", "{prefix}work", Command.Category.ECONOMY);
-        this.bot = bot;
+        super(bot,"work", "Work for some cash", "{prefix}work", Command.Category.ECONOMY);
     }
 
     @Override

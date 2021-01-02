@@ -19,11 +19,9 @@ import java.util.List;
 import java.util.Set;
 
 public class CommandRankcard extends Command {
-    private final TechnoBot bot;
 
     public CommandRankcard(final TechnoBot bot) {
-        super("rankcard", "Customize your rank card", "{prefix}rankcard", Command.Category.LEVELS);
-        this.bot = bot;
+        super(bot,"rankcard", "Customize your rank card", "{prefix}rankcard", Command.Category.LEVELS);
     }
 
     @Override

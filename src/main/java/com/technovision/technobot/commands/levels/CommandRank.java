@@ -21,11 +21,9 @@ import java.net.URL;
 import java.util.Set;
 
 public class CommandRank extends Command {
-    private final TechnoBot bot;
 
     public CommandRank(final TechnoBot bot) {
-        super("rank", "Displays your levels and server rank", "{prefix}rank", Command.Category.LEVELS);
-        this.bot = bot;
+        super(bot,"rank", "Displays your levels and server rank", "{prefix}rank", Command.Category.LEVELS);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.technovision.technobot.commands.music;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import com.technovision.technobot.TechnoBot;
 import com.technovision.technobot.commands.Command;
 import com.technovision.technobot.listeners.managers.MusicManager;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -9,9 +10,9 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 public class CommandNp extends Command {
     private final MusicManager musicManager;
 
-    public CommandNp(final MusicManager musicManager) {
-        super("np", "Displays the currently playing song and its duration/position", "{prefix}np", Command.Category.MUSIC);
-        this.musicManager = musicManager;
+    public CommandNp(final TechnoBot bot) {
+        super(bot,"np", "Displays the currently playing song and its duration/position", "{prefix}np", Command.Category.MUSIC);
+        this.musicManager = bot.getMusicManager();
     }
 
     @Override

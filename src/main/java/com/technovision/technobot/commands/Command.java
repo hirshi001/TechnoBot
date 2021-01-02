@@ -1,6 +1,7 @@
 package com.technovision.technobot.commands;
 
 import com.google.api.client.util.Sets;
+import com.technovision.technobot.TechnoBot;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
 
@@ -20,8 +21,10 @@ public abstract class Command {
     public final Category category;
     public final String description;
     public final String usage;
+    protected final TechnoBot bot;
 
-    public Command(String name, String description, String usage, Category category) {
+    public Command(@NotNull final TechnoBot bot, String name, String description, String usage, Category category) {
+        this.bot = bot;
         this.name = name;
         this.category = category;
         this.description = description;

@@ -1,5 +1,6 @@
 package com.technovision.technobot.commands.other;
 
+import com.technovision.technobot.TechnoBot;
 import com.technovision.technobot.commands.Command;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -8,8 +9,8 @@ import java.util.Date;
 
 public class CommandLearnFabric extends Command{
 
-    public CommandLearnFabric() {
-        super("learnfabric", "Important links and info for learning fabric.", "{prefix}learnfabric", Category.OTHER);
+    public CommandLearnFabric(final TechnoBot bot) {
+        super(bot,"learnfabric", "Important links and info for learning fabric.", "{prefix}learnfabric", Category.OTHER);
     }
 
     @Override

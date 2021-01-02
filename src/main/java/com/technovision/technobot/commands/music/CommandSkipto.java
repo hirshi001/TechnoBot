@@ -1,5 +1,6 @@
 package com.technovision.technobot.commands.music;
 
+import com.technovision.technobot.TechnoBot;
 import com.technovision.technobot.commands.Command;
 import com.technovision.technobot.listeners.managers.MusicManager;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -10,9 +11,9 @@ import java.util.TimerTask;
 public class CommandSkipto extends Command {
     private final MusicManager musicManager;
 
-    public CommandSkipto(final MusicManager musicManager) {
-        super("skipto", "Skips to song index in queue", "{prefix}skipto <number>", Command.Category.MUSIC);
-        this.musicManager = musicManager;
+    public CommandSkipto(final TechnoBot bot) {
+        super(bot,"skipto", "Skips to song index in queue", "{prefix}skipto <number>", Command.Category.MUSIC);
+        this.musicManager = bot.getMusicManager();
     }
 
     @Override

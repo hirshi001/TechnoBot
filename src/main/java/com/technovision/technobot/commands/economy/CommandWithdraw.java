@@ -12,11 +12,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Set;
 
 public class CommandWithdraw extends Command {
-    private final TechnoBot bot;
 
     public CommandWithdraw(final TechnoBot bot) {
-        super("withdraw", "Withdraw cash from the bank", "{prefix}withdraw <amount>", Category.ECONOMY);
-        this.bot = bot;
+        super(bot,"withdraw", "Withdraw cash from the bank", "{prefix}withdraw <amount>", Category.ECONOMY);
     }
 
     @Override

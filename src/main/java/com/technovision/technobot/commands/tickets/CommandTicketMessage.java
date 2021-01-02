@@ -6,11 +6,9 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 public class CommandTicketMessage extends Command {
-    private final TechnoBot bot;
 
     public CommandTicketMessage(final TechnoBot bot) {
-        super("ticketmessage", "Generates the ticket message in the current channel that can be reacted with to open a ticket.", "{prefix}ticketmessage", Category.STAFF);
-        this.bot = bot;
+        super(bot,"ticketmessage", "Generates the ticket message in the current channel that can be reacted with to open a ticket.", "{prefix}ticketmessage", Category.STAFF);
     }
 
     @Override

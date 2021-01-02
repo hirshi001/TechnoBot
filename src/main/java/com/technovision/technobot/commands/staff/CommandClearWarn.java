@@ -1,6 +1,7 @@
 package com.technovision.technobot.commands.staff;
 
 import com.google.common.collect.Sets;
+import com.technovision.technobot.TechnoBot;
 import com.technovision.technobot.commands.Command;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
@@ -11,8 +12,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Set;
 
 public class CommandClearWarn extends Command {
-    public CommandClearWarn() {
-        super("clearinfractions", "Clear infractions of specified user", "clearinfractions <user>", Category.STAFF);
+    public CommandClearWarn(final TechnoBot bot) {
+        super(bot,"clearinfractions", "Clear infractions of specified user", "clearinfractions <user>", Category.STAFF);
     }
 
     @Override

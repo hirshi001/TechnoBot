@@ -1,5 +1,6 @@
 package com.technovision.technobot.commands.music;
 
+import com.technovision.technobot.TechnoBot;
 import com.technovision.technobot.commands.Command;
 import com.technovision.technobot.listeners.managers.MusicManager;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -7,9 +8,9 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 public class CommandVolume extends Command {
     private final MusicManager musicManager;
 
-    public CommandVolume(final MusicManager musicManager) {
-        super("volume", "Change volume of music", "{prefix}volume <volume>", Command.Category.MUSIC);
-        this.musicManager = musicManager;
+    public CommandVolume(final TechnoBot bot) {
+        super(bot,"volume", "Change volume of music", "{prefix}volume <volume>", Command.Category.MUSIC);
+        this.musicManager = bot.getMusicManager();
     }
 
     @Override

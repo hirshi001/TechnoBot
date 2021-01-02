@@ -15,11 +15,9 @@ import java.util.Set;
 public class CommandLeaderboard extends Command {
 
     private final DecimalFormat formatter;
-    private final TechnoBot bot;
 
     public CommandLeaderboard(final TechnoBot bot) {
-        super("leaderboard", "Shows the level Leaderboard", "{prefix}leaderboard <page>", Command.Category.LEVELS);
-        this.bot = bot;
+        super(bot,"leaderboard", "Shows the level Leaderboard", "{prefix}leaderboard <page>", Command.Category.LEVELS);
         formatter = new DecimalFormat("#,###");
     }
 

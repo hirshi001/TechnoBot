@@ -33,11 +33,9 @@ public class CommandMute extends Command {
 
     private final String MUTE_ROLE_NAME = "Muted";
     private Role mute_role;
-    private final TechnoBot bot;
 
     public CommandMute(final TechnoBot bot) {
-        super("mute", "Mutes the specified user", "mute <user>", Command.Category.STAFF);
-        this.bot = bot;
+        super(bot,"mute", "Mutes the specified user", "mute <user>", Command.Category.STAFF);
 
         new Timer().schedule(new TimerTask() {
             @Override

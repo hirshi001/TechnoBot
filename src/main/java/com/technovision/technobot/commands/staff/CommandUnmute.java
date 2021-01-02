@@ -14,12 +14,10 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 public class CommandUnmute extends Command {
 
     private final String MUTE_ROLE_NAME = "Muted";
-    private final TechnoBot bot;
     private Configuration muteTracker; // TODO: 12/15/2020 Unmute user from mute tracker to avoid early unmutes when unmuted and remuted quickly. 
 
     public CommandUnmute(final TechnoBot bot, Configuration muteTracker) {
-        super("unmute", "Un-mutes the specified user", "unmute <user>", Command.Category.STAFF);
-        this.bot = bot;
+        super(bot,"unmute", "Un-mutes the specified user", "unmute <user>", Command.Category.STAFF);
         this.muteTracker = muteTracker;
     }
 

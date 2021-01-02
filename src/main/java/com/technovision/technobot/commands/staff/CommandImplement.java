@@ -6,11 +6,9 @@ import com.technovision.technobot.util.enums.SuggestionResponse;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 public class CommandImplement extends Command {
-    private final TechnoBot bot;
 
     public CommandImplement(final TechnoBot bot) {
-        super("implement", "Implements a suggestion", "{prefix}implement <id> [reason]", Category.STAFF);
-        this.bot = bot;
+        super(bot,"implement", "Implements a suggestion", "{prefix}implement <id> [reason]", Category.STAFF);
     }
 
     @Override

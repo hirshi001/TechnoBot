@@ -1,5 +1,6 @@
 package com.technovision.technobot.commands.music;
 
+import com.technovision.technobot.TechnoBot;
 import com.technovision.technobot.commands.Command;
 import com.technovision.technobot.listeners.managers.MusicManager;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -7,9 +8,9 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 public class CommandSeek extends Command {
     private final MusicManager musicManager;
 
-    public CommandSeek(final MusicManager musicManager) {
-        super("seek", "Seek to a position in the currently playing song", "{prefix}seek <seconds>", Command.Category.MUSIC);
-        this.musicManager = musicManager;
+    public CommandSeek(final TechnoBot bot) {
+        super(bot,"seek", "Seek to a position in the currently playing song", "{prefix}seek <seconds>", Command.Category.MUSIC);
+        this.musicManager = bot.getMusicManager();
     }
 
     @Override

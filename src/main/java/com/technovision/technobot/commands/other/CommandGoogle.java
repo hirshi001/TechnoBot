@@ -1,13 +1,14 @@
 package com.technovision.technobot.commands.other;
 
+import com.technovision.technobot.TechnoBot;
 import com.technovision.technobot.commands.Command;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 public class CommandGoogle extends Command {
 
-    public CommandGoogle() {
-        super("google","Creates a google search","{prefix}google", Command.Category.OTHER);
+    public CommandGoogle(final TechnoBot bot) {
+        super(bot,"google","Creates a google search","{prefix}google", Command.Category.OTHER);
     }
 
     @Override

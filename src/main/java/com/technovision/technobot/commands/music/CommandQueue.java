@@ -2,6 +2,7 @@ package com.technovision.technobot.commands.music;
 
 import com.google.common.collect.Sets;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import com.technovision.technobot.TechnoBot;
 import com.technovision.technobot.commands.Command;
 import com.technovision.technobot.listeners.managers.MusicManager;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -14,9 +15,9 @@ import java.util.Set;
 public class CommandQueue extends Command {
     private final MusicManager musicManager;
 
-    public CommandQueue(final MusicManager musicManager) {
-        super("queue", "Displays a queue of songs", "{prefix}queue", Command.Category.MUSIC);
-        this.musicManager = musicManager;
+    public CommandQueue(final TechnoBot bot) {
+        super(bot,"queue", "Displays a queue of songs", "{prefix}queue", Command.Category.MUSIC);
+        this.musicManager = bot.getMusicManager();
     }
 
     @Override

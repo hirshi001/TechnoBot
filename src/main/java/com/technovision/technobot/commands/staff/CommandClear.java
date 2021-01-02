@@ -14,11 +14,9 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 public class CommandClear extends Command {
-    private final TechnoBot bot;
 
     public CommandClear(final TechnoBot bot) {
-        super("clear", "purges a channel of messages", "{prefix}clear <amount>", Category.STAFF);
-        this.bot = bot;
+        super(bot,"clear", "purges a channel of messages", "{prefix}clear <amount>", Category.STAFF);
     }
 
     @Override

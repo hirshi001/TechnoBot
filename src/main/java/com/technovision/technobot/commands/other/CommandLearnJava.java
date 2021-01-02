@@ -1,5 +1,6 @@
 package com.technovision.technobot.commands.other;
 
+import com.technovision.technobot.TechnoBot;
 import com.technovision.technobot.commands.Command;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -8,8 +9,8 @@ import java.util.Date;
 
 public class CommandLearnJava extends Command{
 
-    public CommandLearnJava() {
-        super("learnjava", "Important links and info for learning java.", "{prefix}learnjava", Command.Category.OTHER);
+    public CommandLearnJava(final TechnoBot bot) {
+        super(bot,"learnjava", "Important links and info for learning java.", "{prefix}learnjava", Command.Category.OTHER);
     }
 
     @Override

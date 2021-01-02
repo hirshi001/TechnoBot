@@ -13,11 +13,9 @@ import java.net.URL;
 import java.util.Set;
 
 public class CommandPlay extends Command {
-    private final TechnoBot bot;
 
     public CommandPlay(final TechnoBot bot) {
-        super("play", "Plays music in voice channel", "{prefix}play [song|url]", Command.Category.MUSIC);
-        this.bot = bot;
+        super(bot,"play", "Plays music in voice channel", "{prefix}play [song|url]", Command.Category.MUSIC);
     }
 
     @Override

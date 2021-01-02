@@ -1,6 +1,7 @@
 package com.technovision.technobot.commands.staff;
 
 import com.google.common.collect.Sets;
+import com.technovision.technobot.TechnoBot;
 import com.technovision.technobot.commands.Command;
 import com.technovision.technobot.data.Configuration;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -15,8 +16,8 @@ import java.util.Set;
 public class CommandInfractions extends Command {
     public static final Configuration infractionConfig = new Configuration("data/", "infractions.json");
 
-    public CommandInfractions() {
-        super("infractions", "Get the infractions of the specified user", "infractions [user]", Category.STAFF);
+    public CommandInfractions(final TechnoBot bot) {
+        super(bot,"infractions", "Get the infractions of the specified user", "infractions [user]", Category.STAFF);
     }
 
     @Override

@@ -8,11 +8,9 @@ import net.dv8tion.jda.api.entities.GuildChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 public class CommandTicketSettings extends Command {
-    private final TechnoBot bot;
 
     public CommandTicketSettings(final TechnoBot bot) {
-        super("ticketsettings", "Guild-specific settings for tickets", "{prefix}ticketsettings [argument] [value]", Category.STAFF);
-        this.bot = bot;
+        super(bot,"ticketsettings", "Guild-specific settings for tickets", "{prefix}ticketsettings [argument] [value]", Category.STAFF);
     }
 
     @Override

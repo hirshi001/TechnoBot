@@ -7,11 +7,9 @@ import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 public class CommandSuggest extends Command {
-    private final TechnoBot bot;
 
     public CommandSuggest(final TechnoBot bot) {
-        super("suggest", "Suggest a feature or idea related to the server", "{prefix}suggest [content]", Command.Category.OTHER);
-        this.bot = bot;
+        super(bot,"suggest", "Suggest a feature or idea related to the server", "{prefix}suggest [content]", Command.Category.OTHER);
     }
 
     @Override

@@ -15,11 +15,9 @@ import java.util.Calendar;
 import java.util.TimeZone;
 
 public class CommandKick extends Command {
-    private final TechnoBot bot;
 
     public CommandKick(final TechnoBot bot) {
-        super("kick", "Kicks the specified user for specified reason", "{prefix}kick <user> [reason]", Command.Category.STAFF);
-        this.bot = bot;
+        super(bot,"kick", "Kicks the specified user for specified reason", "{prefix}kick <user> [reason]", Command.Category.STAFF);
     }
 
     @Override

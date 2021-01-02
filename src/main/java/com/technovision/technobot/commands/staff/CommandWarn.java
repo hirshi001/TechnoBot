@@ -17,11 +17,9 @@ import java.util.Set;
 import java.util.TimeZone;
 
 public class CommandWarn extends Command {
-    private final TechnoBot bot;
     
     public CommandWarn(final TechnoBot bot) {
-        super("warn", "Warns specified user for specified reason", "warn <user> [reason]", Category.STAFF);
-        this.bot = bot;
+        super(bot,"warn", "Warns specified user for specified reason", "warn <user> [reason]", Category.STAFF);
     }
 
     @Override

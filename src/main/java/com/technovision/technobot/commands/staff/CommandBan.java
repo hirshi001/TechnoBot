@@ -15,11 +15,9 @@ import java.util.Calendar;
 import java.util.TimeZone;
 
 public class CommandBan extends Command {
-    private final TechnoBot bot;
 
     public CommandBan(final TechnoBot bot) {
-        super("ban", "Bans the specified user for specified reason", "{prefix}ban <user> [reason]", Command.Category.STAFF);
-        this.bot = bot;
+        super(bot,"ban", "Bans the specified user for specified reason", "{prefix}ban <user> [reason]", Command.Category.STAFF);
     }
 
     @Override

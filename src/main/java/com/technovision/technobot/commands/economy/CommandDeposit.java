@@ -12,11 +12,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Set;
 
 public class CommandDeposit extends Command {
-    private final TechnoBot bot;
 
     public CommandDeposit(final TechnoBot bot) {
-        super("deposit", "Deposit cash into the bank", "{prefix}deposit <amount>", Category.ECONOMY);
-        this.bot = bot;
+        super(bot,"deposit", "Deposit cash into the bank", "{prefix}deposit <amount>", Category.ECONOMY);
     }
 
     @Override

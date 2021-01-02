@@ -18,11 +18,9 @@ import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class CommandRob extends Command {
-    private final TechnoBot bot;
 
     public CommandRob(final TechnoBot bot) {
-        super("rob", "Steal cash from other members", "{prefix}rob [user]", Category.ECONOMY);
-        this.bot = bot;
+        super(bot,"rob", "Steal cash from other members", "{prefix}rob [user]", Category.ECONOMY);
     }
 
     @Override

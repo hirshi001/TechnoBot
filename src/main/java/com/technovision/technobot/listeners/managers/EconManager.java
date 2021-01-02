@@ -216,6 +216,10 @@ public class EconManager {
         return hours + " hours and " + minutes + " minutes";
     }
 
+    public Configuration getEconomyConfig() {
+        return economy;
+    }
+
     public enum Activity {
         WORK, CRIME, NULL
     }

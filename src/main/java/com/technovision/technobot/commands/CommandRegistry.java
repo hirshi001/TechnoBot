@@ -35,6 +35,7 @@ public class CommandRegistry {
                 new CommandRob(bot),
                 new CommandDeposit(bot),
                 new CommandWithdraw(bot),
+                new CommandBalTop(bot),
 
                 // Music
                 new CommandJoin(bot.getMusicManager()),

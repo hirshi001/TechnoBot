@@ -8,6 +8,7 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
+import net.dv8tion.jda.api.exceptions.ContextException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 import javax.annotation.Nonnull;
@@ -36,7 +37,7 @@ public class GuildMemberEvents extends ListenerAdapter {
 
         //Give Member Role
         if (user.isBot()) { return; }
-        user.openPrivateChannel().queue((dm) -> dm.sendMessage(JOIN_MESSAGE).queue());
+        user.openPrivateChannel().queue(dm -> dm.sendMessage(JOIN_MESSAGE).queue());
     }
 
     @Override

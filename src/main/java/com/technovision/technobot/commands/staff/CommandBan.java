@@ -6,6 +6,7 @@ import com.technovision.technobot.logging.AutoModLogger;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -72,15 +73,17 @@ public class CommandBan extends Command {
             reason = reason.substring(reason.indexOf(" "));
         }
 
-        target.getUser().openPrivateChannel().complete().sendMessage(
-                new EmbedBuilder()
-                        .setColor(Command.ERROR_EMBED_COLOR)
-                        .setTitle("You Were Banned From the TechnoVision Server!")
-                        .setDescription("**Reason:** " + reason)
-                        .build())
-                .queue();
-
-        target.ban(0, reason).queue();
+        String finalReason = reason;
+        Member finalTarget = target;
+        target.getUser().openPrivateChannel().queue(dm -> {
+            MessageEmbed msg = new EmbedBuilder()
+                    .setColor(Command.ERROR_EMBED_COLOR)
+                    .setTitle("You Were Banned From the TechnoVision Server!")
+                    .setDescription("**Reason:** " + finalReason)
+                    .build();
+            dm.sendMessage(msg).queue();
+            finalTarget.ban(0, finalReason).queue();
+        }, ban -> finalTarget.ban(0, finalReason).queue());
 
         final String r = reason;
         if (!CommandInfractions.infractionConfig.getJson().has(target.getId()))
@@ -93,20 +96,11 @@ public class CommandBan extends Command {
         }});
         CommandInfractions.infractionConfig.save();
 
-        target.getUser().openPrivateChannel().complete().sendMessage(
-                new EmbedBuilder()
-                        .setColor(Command.ERROR_EMBED_COLOR)
-                        .setTitle("You have been banned from the TechnoVision Server for: " + reason)
-                        .build())
-                .queue();
-
-        final Member finalTarget = target;
-        final String finalReason = reason;
         event.getChannel().sendMessage(new EmbedBuilder()
                 .setAuthor(target.getUser().getAsTag() + " has been banned", null, target.getUser().getEffectiveAvatarUrl())
-                .setDescription("**Reason:** " + reason.replaceAll("`", "")).build()).queue(msg -> {
-            bot.getAutoModLogger().log(event.getGuild(), event.getTextChannel(), finalTarget.getUser(), event.getAuthor(), AutoModLogger.Infraction.BAN, finalReason, msg.getJumpUrl());
-        });
+                .setDescription("**Reason:** " + reason.replaceAll("`", "")).build()).queue();
+
+        bot.getAutoModLogger().log(event.getGuild(), event.getTextChannel(), target.getUser(), event.getAuthor(), AutoModLogger.Infraction.BAN, reason);
 
         return true;
     }

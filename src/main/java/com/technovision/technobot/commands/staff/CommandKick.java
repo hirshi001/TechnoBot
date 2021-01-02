@@ -6,6 +6,7 @@ import com.technovision.technobot.logging.AutoModLogger;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -71,15 +72,17 @@ public class CommandKick extends Command {
             reason = reason.substring(reason.indexOf(" "));
         }
 
-        target.getUser().openPrivateChannel().complete().sendMessage(
-                new EmbedBuilder()
-                        .setColor(Command.ERROR_EMBED_COLOR)
-                        .setTitle("You Were Kicked From the TechnoVision Server!")
-                        .setDescription("**Reason:** " + reason)
-                        .build())
-                .queue();
-
-        target.kick(reason).queue();
+        String finalReason = reason;
+        Member finalTarget = target;
+        target.getUser().openPrivateChannel().queue(dm -> {
+            MessageEmbed msg = new EmbedBuilder()
+                    .setColor(Command.ERROR_EMBED_COLOR)
+                    .setTitle("You Were Kicked From the TechnoVision Server!")
+                    .setDescription("**Reason:** " + finalReason)
+                    .build();
+            dm.sendMessage(msg).queue();
+            finalTarget.kick(finalReason).queue();
+        }, kick -> finalTarget.kick(finalReason).queue());
 
         final String r = reason;
         if(!CommandInfractions.infractionConfig.getJson().has(target.getId())) CommandInfractions.infractionConfig.getJson().put(target.getId(), new JSONArray());
@@ -91,21 +94,11 @@ public class CommandKick extends Command {
         }});
         CommandInfractions.infractionConfig.save();
 
-        target.getUser().openPrivateChannel().complete().sendMessage(
-                new EmbedBuilder()
-                        .setColor(Command.ERROR_EMBED_COLOR)
-                        .setTitle("You have been kicked from the TechnoVision Server for: " + reason)
-                        .build())
-                .queue();
-
-
-        String finalReason = reason;
-        Member finalTarget = target;
         event.getChannel().sendMessage(new EmbedBuilder()
                 .setAuthor(target.getUser().getAsTag() + " has been kicked", null, target.getUser().getEffectiveAvatarUrl())
-                .setDescription("**Reason:** " + reason.replaceAll("`","")).build()).queue(msg -> {
-                    bot.getAutoModLogger().log(event.getGuild(), event.getTextChannel(), finalTarget.getUser(), event.getAuthor(), AutoModLogger.Infraction.KICK, finalReason, msg.getJumpUrl());
-        });
+                .setDescription("**Reason:** " + reason.replaceAll("`","")).build()).queue();
+
+        bot.getAutoModLogger().log(event.getGuild(), event.getTextChannel(), target.getUser(), event.getAuthor(), AutoModLogger.Infraction.KICK, reason);
 
         return true;
     }

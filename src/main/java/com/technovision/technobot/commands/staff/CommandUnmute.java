@@ -71,7 +71,7 @@ public class CommandUnmute extends Command {
             Member finalTarget = target;
             event.getChannel().sendMessage(new EmbedBuilder()
                     .setAuthor(target.getUser().getAsTag() + " has been un-muted", null, target.getUser().getEffectiveAvatarUrl()).build()).queue(msg -> {
-                bot.getAutoModLogger().log(event.getGuild(), event.getTextChannel(), finalTarget.getUser(), event.getAuthor(), AutoModLogger.Infraction.UNMUTE, "_ _", msg.getJumpUrl());
+                bot.getAutoModLogger().log(event.getGuild(), event.getTextChannel(), finalTarget.getUser(), event.getAuthor(), AutoModLogger.Infraction.UNMUTE, "_ _");
             });
         } catch(IndexOutOfBoundsException e) {
             bot.getLogger().log(Logger.LogLevel.WARNING, "Mute role does not exist!");

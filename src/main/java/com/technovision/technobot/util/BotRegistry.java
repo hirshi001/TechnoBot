@@ -53,7 +53,7 @@ public class BotRegistry {
     }
 
     public List<Command> getCommands() {
-        return commands;
+        return new ArrayList<>(commands);
     }
 
     @Nullable

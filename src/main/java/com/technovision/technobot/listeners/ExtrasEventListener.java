@@ -51,7 +51,7 @@ public class ExtrasEventListener extends ListenerAdapter {
         } else if (event.getMessage().getMentionedUsers().contains(event.getJDA().getSelfUser())) {
             String reply = "";
 
-            switch (new Random().nextInt(4)) {
+            switch (ThreadLocalRandom.current().nextInt(4)) {
                 case 0:
                     reply = "Uhhh, do you need something?";
                     break;
@@ -72,7 +72,7 @@ public class ExtrasEventListener extends ListenerAdapter {
         } else if (msg.contains("@everyone")) {
             String reply = "";
 
-            switch (new Random().nextInt(4)) {
+            switch (ThreadLocalRandom.current().nextInt(4)) {
                 case 0:
                     reply = "<@!" + event.getMember().getUser().getId() + ">, did you *really* think that would work?";
                     break;

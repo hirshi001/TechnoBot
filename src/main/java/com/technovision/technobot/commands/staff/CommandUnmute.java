@@ -2,6 +2,7 @@ package com.technovision.technobot.commands.staff;
 
 import com.technovision.technobot.TechnoBot;
 import com.technovision.technobot.commands.Command;
+import com.technovision.technobot.data.Configuration;
 import com.technovision.technobot.logging.AutoModLogger;
 import com.technovision.technobot.logging.Logger;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -13,6 +14,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 public class CommandUnmute extends Command {
 
     private final TechnoBot bot;
+    private Configuration muteTracker; // TODO: 12/15/2020 Unmute user from mute tracker to avoid early unmutes when unmuted and remuted quickly.
 
     public CommandUnmute(final TechnoBot bot) {
         super("unmute", "Un-mutes the specified user", "unmute <user>", Command.Category.STAFF);
@@ -69,9 +71,7 @@ public class CommandUnmute extends Command {
             event.getGuild().removeRoleFromMember(member, mute_role).queue();
             Member finalTarget = target;
             event.getChannel().sendMessage(new EmbedBuilder()
-                    .setAuthor(target.getUser().getAsTag() + " has been un-muted", null, target.getUser().getEffectiveAvatarUrl()).build()).queue(msg -> {
-                bot.getAutoModLogger().log(event.getGuild(), event.getTextChannel(), finalTarget.getUser(), event.getAuthor(), AutoModLogger.Infraction.UNMUTE, "_ _", msg.getJumpUrl());
-            });
+                    .setAuthor(target.getUser().getAsTag() + " has been un-muted", null, target.getUser().getEffectiveAvatarUrl()).build()).queue(msg -> bot.getAutoModLogger().log(event.getGuild(), event.getTextChannel(), finalTarget.getUser(), event.getAuthor(), AutoModLogger.Infraction.UNMUTE, "_ _", msg.getJumpUrl()));
         } catch(IndexOutOfBoundsException e) {
             bot.getLogger().log(Logger.LogLevel.WARNING, "Mute role does not exist!");
         }

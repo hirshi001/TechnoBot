@@ -9,11 +9,19 @@ TechnoBot is a bot created specifically for the [TechnoVision Discord Server](ht
     - Logging
         - Custom Audit Log for Warn, Kick, Ban, etc.! Keep track of your staff activity!
 - Experience System
-    - Keep track of users' activity on the server through a leveling system!
+    - Keep track of users' activity on the server through a leveling system and customizable rankcard!
 - Voice Chat Music
     - Play music through voice chat using YouTube videos!
 - Suggestion System
-    - Receive suggestions from users about anything!
+    - Receive suggestions from users about anything and have staff leave responses!
+- Starboard
+    - Dynamic leaderboard for user showcases.
+- Economy
+    - Work, rob other players, gamble, and buy items.
+- Ticket System
+    - Staff ticketing to resolve user issues, reports, or appeals
+- Fun Commands
+    - Various fun commands like google search, ping, and quick links
 
 ## How to Use
 This bot is different in the fact that it isn't invitable. Rather, you have to compile, configure, and host the bot yourself.

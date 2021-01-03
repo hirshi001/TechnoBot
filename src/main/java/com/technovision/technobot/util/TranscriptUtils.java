@@ -9,6 +9,11 @@ import java.time.format.FormatStyle;
 import java.util.List;
 
 public class TranscriptUtils {
+    /**
+     * Converts a message thread (in {@link List} form) to a transcript (in {@link String} form).
+     * @param messages The message thread.
+     * @return The thread in String form.
+     */
     public static String threadToTranscript(List<Message> messages) {
         String s = "";
         for(int i = messages.size() - 1; i >= 0; i--) {
@@ -17,6 +22,12 @@ public class TranscriptUtils {
         return s;
     }
 
+    /**
+     * Converts a message to a transcript (in {@link String} form).
+     * @param message
+     * @return
+     * @see TranscriptUtils#threadToTranscript(List) Bulk message conversion
+     */
     public static String messageToTranscript(Message message) {
         String s = message.getMember().getEffectiveName() + " - " + message.getTimeCreated().format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.FULL, FormatStyle.MEDIUM).withZone(ZoneId.of("UTC"))) + "\n" +
                 message.getContentRaw() + "\n";
@@ -26,6 +37,11 @@ public class TranscriptUtils {
         return s + "\n\n";
     }
 
+    /**
+     * Converts a message embed to a transcript using XML for readability.
+     * @param embed The message embed.
+     * @return The Message Embed in XML format.
+     */
     public static String embedToTranscript(MessageEmbed embed) {
         String s =  "<embed>\n" +
                 "    <title>"+embed.getTitle()+"</title>\n" +

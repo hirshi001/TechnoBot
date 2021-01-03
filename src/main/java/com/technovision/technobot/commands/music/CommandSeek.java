@@ -32,6 +32,7 @@ public class CommandSeek extends Command {
             event.getChannel().sendMessage(
                     Placeholders.setPlaceholders(BotLocalization.getNodeOrPath("commands.common.missingArgument"),
                             Placeholders.fromMessageEvent(event)
+                                    .add("usage", usage.replaceAll("\\{prefix}", "!")) // TODO: 1/2/2021 Softcoding for prefixes
                                     .get()
                     )
             ).queue();
@@ -48,6 +49,8 @@ public class CommandSeek extends Command {
         event.getChannel().sendMessage(
                 Placeholders.setPlaceholders(BotLocalization.getNodeOrPath("commands.music.seekPlayer"),
                         Placeholders.fromMessageEvent(event)
+                                .add("seconds", args[0])
+                                .add("trackTitle", musicManager.handlers.get(event.getGuild().getIdLong()).trackScheduler.getQueueCopy().get(0).getInfo().title)
                                 .get()
                 )
         ).queue();

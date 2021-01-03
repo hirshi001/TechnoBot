@@ -2,9 +2,6 @@ package com.technovision.technobot.commands;
 
 import com.technovision.technobot.TechnoBot;
 import com.technovision.technobot.commands.economy.*;
-import com.technovision.technobot.commands.levels.CommandLeaderboard;
-import com.technovision.technobot.commands.levels.CommandRank;
-import com.technovision.technobot.commands.levels.CommandRankcard;
 import com.technovision.technobot.commands.music.*;
 import com.technovision.technobot.commands.other.*;
 import com.technovision.technobot.commands.staff.*;
@@ -21,11 +18,6 @@ public class CommandRegistry {
 
     public CommandRegistry(final TechnoBot bot) {
         bot.getRegistry().registerCommands(
-
-                // Levels
-                new CommandRank(bot),
-                new CommandRankcard(bot),
-                new CommandLeaderboard(bot),
 
                 // Economy
                 new CommandBalance(bot),

@@ -30,7 +30,7 @@ public class CommandJoin extends Command {
         }
         musicManager.joinVoiceChannel(event.getGuild(), event.getMember().getVoiceState().getChannel(), event.getChannel());
         event.getChannel().sendMessage(
-                Placeholders.setPlaceholders(BotLocalization.getNodeOrPath("commands.music.joinVoiceChannel"),
+                Placeholders.setPlaceholders(BotLocalization.getNodeOrPath("commands.music.joinedVoice"),
                         Placeholders.fromMessageEvent(event)
                         .withVoiceCapabilities(event.getMember().getVoiceState().getChannel())
                         .get()

@@ -47,6 +47,7 @@ public class CommandSkipto extends Command {
             event.getChannel().sendMessage(
                     Placeholders.setPlaceholders(BotLocalization.getNodeOrPath("commands.common.missingArgument"),
                             Placeholders.fromMessageEvent(event)
+                                    .add("usage", usage.replaceAll("\\{prefix}", "!")) // TODO: 1/2/2021 Softcoding for prefixes
                                     .get()
                     )
             ).queue();
@@ -60,18 +61,12 @@ public class CommandSkipto extends Command {
             ).queue();
             return true;
         }
-
-        new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
-                event.getChannel().sendMessage(
-                        Placeholders.setPlaceholders(BotLocalization.getNodeOrPath("commands.music.noSongsPlaying"),
-                                Placeholders.fromMessageEvent(event)
-                                        .get()
-                        )
-                ).queue();
-            }
-        }, 1000L);
+        event.getChannel().sendMessage(
+                Placeholders.setPlaceholders(BotLocalization.getNodeOrPath("commands.music.skipPlayer"),
+                        Placeholders.fromMessageEvent(event)
+                                .get()
+                )
+        ).queue();
 
         return true;
     }

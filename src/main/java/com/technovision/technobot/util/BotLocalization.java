@@ -18,7 +18,7 @@ public class BotLocalization {
     private static Map.Entry<String, Configuration> currentLanguage;
     private static File langDir = new File("data/lang/");
 
-    private static void init() {
+    public static void init() {
         if (!langDir.exists()) {
             langDir.mkdirs();
         }
@@ -32,13 +32,6 @@ public class BotLocalization {
         }
 
         if (!languages.containsKey("en_us")) languages.put("en_us", getEnglishDefaults());
-    }
-
-    /**
-     * temp for testing. In production, run all of this somewhere. It should be localized before commands and events are initialized.
-     */
-    public static void main(String[] args) {
-        init();
 
         if(!setLanguage("en_us")) {
             System.out.println("Failed to set language!");
@@ -101,8 +94,10 @@ public class BotLocalization {
      * @return The localized message or value. Returns path if not found.
      */
     public static @NotNull String getNodeOrPath(String path) {
-        String value = getNode(path);
-        return value != null ? value : path;
+        try {
+            String value = getNode(path);
+            return value != null ? value : path;
+        } catch(NullPointerException e) {return path;}
     }
 
     /**
@@ -146,7 +141,7 @@ public class BotLocalization {
                 if (!commandsCommon.has("noPermission"))
                     commandsCommon.put("noPermission", ":x: You do not have permission to do that!");
                 if (!commandsCommon.has("missingArgument"))
-                    commandsCommon.put("missingArgument", "Missing argument: {argument}");
+                    commandsCommon.put("missingArgument", "Missing argument. Usage: {usage}");
                 if(!commandsCommon.has("numberFormat"))
                     commandsCommon.put("numberFormat", "Please specify a number!");
                 if(!commandsCommon.has("numberOutOfBounds"))
@@ -156,9 +151,9 @@ public class BotLocalization {
                 if(!commandsMusic.has("notInVoice"))
                     commandsMusic.put("notInVoice", "You are not in a voice channel!");
                 if(!commandsMusic.has("joinedVoice"))
-                    commandsMusic.put("joinedVoice", "Joined {channel}!");
+                    commandsMusic.put("joinedVoice", "Joined `{channel}`!");
                 if(!commandsMusic.has("leftVoice"))
-                    commandsMusic.put("leftVoice", "Left voice channel!");
+                    commandsMusic.put("leftVoice", "Left voice `{channel}`!");
                 if(!commandsMusic.has("noSongsPlaying"))
                     commandsMusic.put("noSongsPlaying", "There are no songs playing!");
                 if(!commandsMusic.has("pausePlayer"))

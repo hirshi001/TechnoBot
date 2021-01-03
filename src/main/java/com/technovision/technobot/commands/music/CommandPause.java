@@ -29,7 +29,7 @@ public class CommandPause extends Command {
         MusicManager.TrackScheduler sch = musicManager.handlers.get(event.getGuild().getIdLong()).trackScheduler;
         sch.setPaused(true);
         event.getChannel().sendMessage(
-                Placeholders.setPlaceholders(BotLocalization.getNodeOrPath("commands.music.puasePlayer"),
+                Placeholders.setPlaceholders(BotLocalization.getNodeOrPath("commands.music.pausePlayer"),
                         Placeholders.fromMessageEvent(event)
                                 .get()
                 )

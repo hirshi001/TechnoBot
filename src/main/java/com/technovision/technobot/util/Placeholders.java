@@ -73,6 +73,11 @@ public class Placeholders {
             return this;
         }
 
+        public final Placeholder add(String key, Object value) {
+            placeholderMap.put(key, value);
+            return this;
+        }
+
         public final Map<String, Object> get() {
             return placeholderMap;
         }

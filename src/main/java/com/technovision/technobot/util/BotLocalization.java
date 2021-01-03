@@ -1,7 +1,12 @@
 package com.technovision.technobot.util;
 
+import com.mongodb.util.JSON;
 import com.technovision.technobot.data.Configuration;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -113,13 +118,56 @@ public class BotLocalization {
     }
 
     /**
-     * Quick method to return a {@link JSONObject} if possible, otherwise returns {@link String}.
+     * Generates a {@link MessageEmbed} from a {@link JSONObject}.
+     * @param jsonObject JSONObject to parse
+     * @return The Message Embed
+     */
+    private static @Nullable MessageEmbed toEmbed(@Nullable JSONObject jsonObject) {
+        if(jsonObject == null) return null;
+
+        EmbedBuilder builder = new EmbedBuilder();
+
+        // Title
+        if(jsonObject.has("title")) builder.setTitle(jsonObject.getString("title"));
+
+        // Description
+        if(jsonObject.has("description")) builder.setDescription(jsonObject.getString("description"));
+
+        // Footer
+        if(jsonObject.has("footer")) builder.setFooter(jsonObject.getJSONObject("footer").getString("text"), jsonObject.getJSONObject("footer").getString("icon"));
+
+        // Author
+        if(jsonObject.has("author")) builder.setAuthor(
+                jsonObject.getJSONObject("author").getString("text"),
+                jsonObject.getJSONObject("author").getString("url"),
+                jsonObject.getJSONObject("author").getString("icon"));
+
+        // Color
+        if(jsonObject.has("color")) builder.setColor(jsonObject.getInt("color"));
+
+        // Fields
+        if(jsonObject.has("fields")) {
+            JSONArray fields = jsonObject.getJSONArray("fields");
+            for(Object o : fields) {
+                if(o instanceof JSONObject) {
+                    JSONObject field = (JSONObject) o;
+
+                    builder.addField(field.getString("name"), field.getString("value"), field.getBoolean("inline"));
+                }
+            }
+        }
+
+        return builder.build();
+    }
+
+    /**
+     * Quick method to return a {@link MessageEmbed} if possible, otherwise returns {@link String}.
      * @param path The path to node value.
      * @return The localized message or value as either a JSONObject or String. Null if not found.
      */
     public static Object getAvailableValue(String path) {
         try {
-            return getJSONNode(path);
+            return toEmbed(getJSONNode(path));
         } catch(JSONException e) {
             return getNode(path);
         }

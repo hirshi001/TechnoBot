@@ -34,10 +34,11 @@ public class BotRegistry {
     public void addListeners(@NotNull JDA jda) {
         logger.log(Logger.LogLevel.INFO, "Beginning EventListener Initialization Process");
 
-        eventListeners.forEach(listener -> {
+        for (ListenerAdapter listener : eventListeners) {
             logger.log(Logger.LogLevel.INFO, "Adding EventListener: " + listener.getClass().getName());
+
             jda.addEventListener(listener);
-        });
+        }
 
         logger.log(Logger.LogLevel.INFO, "Finished EventListener Initialization Process");
     }
@@ -45,8 +46,9 @@ public class BotRegistry {
     public void registerCommands(Command... commands) {
         logger.log(Logger.LogLevel.INFO, "Beginning Command Registry Protocol for " + commands.length + " commands.");
 
-        Arrays.stream(commands).forEach(command ->
-                logger.log(Logger.LogLevel.INFO, "Registering Command: " + command.name));
+        for (Command command : commands) {
+            logger.log(Logger.LogLevel.INFO, "Registering Command: " + command.name);
+        }
 
         this.commands.addAll(Arrays.asList(commands));
         logger.log(Logger.LogLevel.INFO, "Finished Command Registry Protocol");

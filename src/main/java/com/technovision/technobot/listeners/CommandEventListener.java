@@ -40,11 +40,12 @@ public class CommandEventListener extends ListenerAdapter {
 
             BotRegistry registry = bot.getRegistry();
 
-            registry.getCommands().forEach(cmd -> {
+            for (Command cmd : registry.getCommands()) {
                 if ((Command.PREFIX + cmd.name).equalsIgnoreCase(command)) {
                     if (!cmd.execute(event, args)) {
                         bot.getLogger().log(Logger.LogLevel.SEVERE, "Command '" + cmd.name + "' failed to execute!");
                     }
+
                     return;
                 }
 
@@ -52,8 +53,10 @@ public class CommandEventListener extends ListenerAdapter {
                     if (!cmd.execute(event, args)) {
                         bot.getLogger().log(Logger.LogLevel.SEVERE, "Command '" + cmd.name + "' failed to execute!");
                     }
+
+                    return;
                 }
-            });
+            }
         }
     }
 }

@@ -4,6 +4,8 @@ import com.google.common.collect.Sets;
 import com.technovision.technobot.TechnoBot;
 import com.technovision.technobot.commands.Command;
 import com.technovision.technobot.listeners.managers.MusicManager;
+import com.technovision.technobot.util.BotLocalization;
+import com.technovision.technobot.util.Placeholders;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
 
@@ -20,18 +22,38 @@ public class CommandSkip extends Command {
     @Override
     public boolean execute(MessageReceivedEvent event, String[] args) {
         if(event.getMember()==null||event.getMember().getVoiceState()==null||!event.getMember().getVoiceState().inVoiceChannel()||event.getMember().getVoiceState().getChannel()==null) {
-            event.getChannel().sendMessage("You are not in a voice channel!").queue();
+            event.getChannel().sendMessage(
+                    Placeholders.setPlaceholders(BotLocalization.getNodeOrPath("commands.music.notInVoice"),
+                            Placeholders.fromMessageEvent(event)
+                                    .get()
+                    )
+            ).queue();
             return true;
         }
         if(musicManager.handlers.get(event.getGuild().getIdLong())==null) {
-            event.getChannel().sendMessage("Please use `!join` first!").queue();
+            event.getChannel().sendMessage(
+                    Placeholders.setPlaceholders(BotLocalization.getNodeOrPath("commands.music.notInVoice"),
+                            Placeholders.fromMessageEvent(event)
+                                    .get()
+                    )
+            ).queue();
             return true;
         }
         if(musicManager.handlers.get(event.getGuild().getIdLong()).trackScheduler.getQueueCopy().size()==0) {
-            event.getChannel().sendMessage("There are no songs playing.").queue();
+            event.getChannel().sendMessage(
+                    Placeholders.setPlaceholders(BotLocalization.getNodeOrPath("commands.music.noSongsPlaying"),
+                            Placeholders.fromMessageEvent(event)
+                                    .get()
+                    )
+            ).queue();
             return true;
         }
-        event.getChannel().sendMessage("Skipping...").queue();
+        event.getChannel().sendMessage(
+                Placeholders.setPlaceholders(BotLocalization.getNodeOrPath("commands.music.skipPlayer"),
+                        Placeholders.fromMessageEvent(event)
+                                .get()
+                )
+        ).queue();
 
         musicManager.handlers.get(event.getGuild().getIdLong()).trackScheduler.skip();
         return true;

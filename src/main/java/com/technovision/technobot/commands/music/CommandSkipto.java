@@ -3,6 +3,8 @@ package com.technovision.technobot.commands.music;
 import com.technovision.technobot.TechnoBot;
 import com.technovision.technobot.commands.Command;
 import com.technovision.technobot.listeners.managers.MusicManager;
+import com.technovision.technobot.util.BotLocalization;
+import com.technovision.technobot.util.Placeholders;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 import java.util.Timer;
@@ -19,7 +21,12 @@ public class CommandSkipto extends Command {
     @Override
     public boolean execute(MessageReceivedEvent event, String[] args) {
         if(musicManager.handlers.get(event.getGuild().getIdLong())==null||musicManager.handlers.get(event.getGuild().getIdLong()).trackScheduler.getQueueCopy().size()==0) {
-            event.getChannel().sendMessage("There are no songs playing.").queue();
+            event.getChannel().sendMessage(
+                    Placeholders.setPlaceholders(BotLocalization.getNodeOrPath("commands.music.noSongsPlaying"),
+                            Placeholders.fromMessageEvent(event)
+                                    .get()
+                    )
+            ).queue();
             return true;
         }
 
@@ -27,22 +34,42 @@ public class CommandSkipto extends Command {
             MusicManager.TrackScheduler scheduler = musicManager.handlers.get(event.getGuild().getIdLong()).trackScheduler;
             int queueSize = scheduler.getQueueCopy().size();
             if (Integer.parseInt(args[0]) >= queueSize || Integer.parseInt(args[0]) <= 0 ) {
-                event.getChannel().sendMessage("That is not a valid track number!").queue();
+                event.getChannel().sendMessage(
+                        Placeholders.setPlaceholders(BotLocalization.getNodeOrPath("commands.common.numberOutOfBounds"),
+                                Placeholders.fromMessageEvent(event)
+                                        .get()
+                        )
+                ).queue();
                 return true;
             }
             scheduler.skipTo(Math.min(Integer.parseInt(args[0]), queueSize));
         } catch(IndexOutOfBoundsException e) {
-            event.getChannel().sendMessage("Please specify a position to skip to!").queue();
+            event.getChannel().sendMessage(
+                    Placeholders.setPlaceholders(BotLocalization.getNodeOrPath("commands.common.missingArgument"),
+                            Placeholders.fromMessageEvent(event)
+                                    .get()
+                    )
+            ).queue();
             return true;
         } catch(NumberFormatException e) {
-            event.getChannel().sendMessage("That is not a number!").queue();
+            event.getChannel().sendMessage(
+                    Placeholders.setPlaceholders(BotLocalization.getNodeOrPath("commands.common.numberFormat"),
+                            Placeholders.fromMessageEvent(event)
+                                    .get()
+                    )
+            ).queue();
             return true;
         }
 
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
-                event.getChannel().sendMessage("Skipped to "+musicManager.handlers.get(event.getGuild().getIdLong()).trackScheduler.getQueueCopy().get(0).getInfo().title).queue();
+                event.getChannel().sendMessage(
+                        Placeholders.setPlaceholders(BotLocalization.getNodeOrPath("commands.music.noSongsPlaying"),
+                                Placeholders.fromMessageEvent(event)
+                                        .get()
+                        )
+                ).queue();
             }
         }, 1000L);
 

@@ -4,6 +4,8 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.technovision.technobot.TechnoBot;
 import com.technovision.technobot.commands.Command;
 import com.technovision.technobot.listeners.managers.MusicManager;
+import com.technovision.technobot.util.BotLocalization;
+import com.technovision.technobot.util.Placeholders;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
@@ -18,7 +20,12 @@ public class CommandNp extends Command {
     @Override
     public boolean execute(MessageReceivedEvent event, String[] args) {
         if(musicManager.handlers.get(event.getGuild().getIdLong())==null||musicManager.handlers.get(event.getGuild().getIdLong()).trackScheduler.getQueueCopy().size()==0) {
-            event.getChannel().sendMessage("There are no songs playing.").queue();
+            event.getChannel().sendMessage(
+                    Placeholders.setPlaceholders(BotLocalization.getNodeOrPath("commands.music.noSongsPlaying"),
+                            Placeholders.fromMessageEvent(event)
+                            .get()
+                    )
+            ).queue();
             return true;
         }
         AudioTrack currentPlaying = musicManager.handlers.get(event.getGuild().getIdLong()).trackScheduler.getQueueCopy().get(0);

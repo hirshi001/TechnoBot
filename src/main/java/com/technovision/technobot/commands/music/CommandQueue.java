@@ -5,6 +5,8 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.technovision.technobot.TechnoBot;
 import com.technovision.technobot.commands.Command;
 import com.technovision.technobot.listeners.managers.MusicManager;
+import com.technovision.technobot.util.BotLocalization;
+import com.technovision.technobot.util.Placeholders;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
@@ -24,16 +26,22 @@ public class CommandQueue extends Command {
     public boolean execute(MessageReceivedEvent event, String[] args) {
         EmbedBuilder embed = new EmbedBuilder();
         if(musicManager.handlers.get(event.getGuild().getIdLong())==null) {
-            embed.setDescription(":x: There's no song in the queue for me to play. **!play** a song first.");
-            embed.setColor(ERROR_EMBED_COLOR);
-            event.getChannel().sendMessage(embed.build()).queue();
+            event.getChannel().sendMessage(
+                    Placeholders.setPlaceholders(BotLocalization.getNodeOrPath("commands.music.noSongsPlaying"),
+                            Placeholders.fromMessageEvent(event)
+                                    .get()
+                    )
+            ).queue();
             return true;
         }
         List<AudioTrack> tracks = musicManager.handlers.get(event.getGuild().getIdLong()).trackScheduler.getQueueCopy();
         if(tracks.size()==0||tracks.get(0)==null) {
-            embed.setDescription(":x: There's no song in the queue for me to play. **!play** a song first.");
-            embed.setColor(ERROR_EMBED_COLOR);
-            event.getChannel().sendMessage(embed.build()).queue();
+            event.getChannel().sendMessage(
+                    Placeholders.setPlaceholders(BotLocalization.getNodeOrPath("commands.music.noSongsPlaying"),
+                            Placeholders.fromMessageEvent(event)
+                                    .get()
+                    )
+            ).queue();
             return true;
         }
 

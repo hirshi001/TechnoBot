@@ -3,6 +3,8 @@ package com.technovision.technobot.commands.music;
 import com.technovision.technobot.TechnoBot;
 import com.technovision.technobot.commands.Command;
 import com.technovision.technobot.listeners.managers.MusicManager;
+import com.technovision.technobot.util.BotLocalization;
+import com.technovision.technobot.util.Placeholders;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 public class CommandSeek extends Command {
@@ -16,19 +18,39 @@ public class CommandSeek extends Command {
     @Override
     public boolean execute(MessageReceivedEvent event, String[] args) {
         if(musicManager.handlers.get(event.getGuild().getIdLong())==null||musicManager.handlers.get(event.getGuild().getIdLong()).trackScheduler.getQueueCopy().size()==0) {
-            event.getChannel().sendMessage("There are no songs playing.").queue();
+            event.getChannel().sendMessage(
+                    Placeholders.setPlaceholders(BotLocalization.getNodeOrPath("commands.music.noSongsPlaying"),
+                            Placeholders.fromMessageEvent(event)
+                                    .get()
+                    )
+            ).queue();
             return true;
         }
         try {
             musicManager.handlers.get(event.getGuild().getIdLong()).trackScheduler.getQueueCopy().get(0).setPosition(Math.min(Integer.parseInt(args[0]) * 1000, musicManager.handlers.get(event.getGuild().getIdLong()).trackScheduler.getQueueCopy().get(0).getDuration()));
         } catch(IndexOutOfBoundsException e) {
-            event.getChannel().sendMessage("Please specify a time to seek to!").queue();
+            event.getChannel().sendMessage(
+                    Placeholders.setPlaceholders(BotLocalization.getNodeOrPath("commands.common.missingArgument"),
+                            Placeholders.fromMessageEvent(event)
+                                    .get()
+                    )
+            ).queue();
             return true;
         } catch(NumberFormatException e) {
-            event.getChannel().sendMessage("Please specify a *number*!").queue();
+            event.getChannel().sendMessage(
+                    Placeholders.setPlaceholders(BotLocalization.getNodeOrPath("commands.common.numberFormat"),
+                            Placeholders.fromMessageEvent(event)
+                                    .get()
+                    )
+            ).queue();
             return true;
         }
-        event.getChannel().sendMessage("Seeked to "+args[0]+" seconds on song `"+musicManager.handlers.get(event.getGuild().getIdLong()).trackScheduler.getQueueCopy().get(0).getInfo().title+"`!").queue();
+        event.getChannel().sendMessage(
+                Placeholders.setPlaceholders(BotLocalization.getNodeOrPath("commands.music.seekPlayer"),
+                        Placeholders.fromMessageEvent(event)
+                                .get()
+                )
+        ).queue();
         return true;
     }
 }

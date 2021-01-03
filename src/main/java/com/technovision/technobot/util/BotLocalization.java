@@ -1,6 +1,7 @@
 package com.technovision.technobot.util;
 
 import com.technovision.technobot.data.Configuration;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -94,6 +95,15 @@ public class BotLocalization {
         return value;
     }
 
+    /**
+     * Gets a localization node if exists, otherwise returns an empty string.
+     * @param path The path to node value.
+     * @return The localized message or value. Returns path if not found.
+     */
+    public static @NotNull String getNodeOrPath(String path) {
+        String value = getNode(path);
+        return value != null ? value : path;
+    }
 
     /**
      * Gets node as JSONObject. Note that this uses {@link BotLocalization#getNode(String)}, so it only returns a JSONObject version of the String attached to the key.
@@ -133,42 +143,36 @@ public class BotLocalization {
                 if (!commands.has("music")) commands.put("music", new JSONObject());
 
                 JSONObject commandsCommon = commands.getJSONObject("common");
-                
                 if (!commandsCommon.has("noPermission"))
                     commandsCommon.put("noPermission", ":x: You do not have permission to do that!");
-
                 if (!commandsCommon.has("missingArgument"))
                     commandsCommon.put("missingArgument", "Missing argument: {argument}");
-
                 if(!commandsCommon.has("numberFormat"))
                     commandsCommon.put("numberFormat", "Please specify a number!");
+                if(!commandsCommon.has("numberOutOfBounds"))
+                    commandsCommon.put("numberOutOfBounds", "That number is out of bounds!");
 
                 JSONObject commandsMusic = commands.getJSONObject("music");
-
                 if(!commandsMusic.has("notInVoice"))
                     commandsMusic.put("notInVoice", "You are not in a voice channel!");
-
                 if(!commandsMusic.has("joinedVoice"))
                     commandsMusic.put("joinedVoice", "Joined {channel}!");
-
                 if(!commandsMusic.has("leftVoice"))
                     commandsMusic.put("leftVoice", "Left voice channel!");
-
                 if(!commandsMusic.has("noSongsPlaying"))
                     commandsMusic.put("noSongsPlaying", "There are no songs playing!");
-
                 if(!commandsMusic.has("pausePlayer"))
                     commandsMusic.put("pausePlayer", ":pause_button: Paused the Player!");
-
                 if(!commandsMusic.has("unpausePlayer"))
                     commandsMusic.put("unpausePlayer", ":arrow_forward: Resumed the Player!");
-
                 if(!commandsMusic.has("seekPlayer"))
                     commandsMusic.put("seekPlayer", "Seeked to {seconds} seconds on song `{trackTitle}`!");
-
                 if(!commandsMusic.has("shufflePlayer"))
                     commandsMusic.put("shufflePlayer", "\uD83D\uDD00 Shuffled the queue!");
-
+                if(!commandsMusic.has("skipPlayer"))
+                    commandsMusic.put("skipPlayer", "Skipping...");
+                if(!commandsMusic.has("volumePlayer"))
+                    commandsMusic.put("volumePlayer", "🔈 Set volume to {volume}!");
                 // TODO: 1/2/2021 Add embeds to defaults once embed JSON formatting is ready.
             }
         };

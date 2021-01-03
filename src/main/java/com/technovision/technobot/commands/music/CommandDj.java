@@ -4,6 +4,7 @@ import com.technovision.technobot.TechnoBot;
 import com.technovision.technobot.commands.Command;
 import com.technovision.technobot.listeners.managers.MusicManager;
 import com.technovision.technobot.util.BotLocalization;
+import com.technovision.technobot.util.Placeholders;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -19,7 +20,12 @@ public class CommandDj extends Command {
     @Override
     public boolean execute(MessageReceivedEvent event, String[] args) {
         if(musicManager.handlers.get(event.getGuild().getIdLong())==null||musicManager.handlers.get(event.getGuild().getIdLong()).trackScheduler.getQueueCopy().size()==0) {
-            event.getChannel().sendMessage(BotLocalization.getNode("")).queue();
+            event.getChannel().sendMessage(
+                    Placeholders.setPlaceholders(BotLocalization.getNodeOrPath("commands.music.notInVoice"),
+                            Placeholders.fromMessageEvent(event)
+                            .get()
+                    )
+            ).queue();
             return true;
         }
         MusicManager.TrackScheduler sch = musicManager.handlers.get(event.getGuild().getIdLong()).trackScheduler;

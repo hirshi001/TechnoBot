@@ -1,9 +1,6 @@
 package com.technovision.technobot.util;
 
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.MessageChannel;
-import net.dv8tion.jda.api.entities.VoiceChannel;
+import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
@@ -112,6 +109,36 @@ public class Placeholders {
             placeholderMap.put("voiceChannelId", voiceChannel.getIdLong());
             placeholderMap.put("voiceChannelBitrate", voiceChannel.getBitrate());
             placeholderMap.put("voiceChannelUserLimit", voiceChannel.getUserLimit());
+
+            return this;
+        }
+
+        /**
+         * Adds role placeholders to the map.
+         * @param role The role used to add capabilities.
+         * @return this to allow for chaining.
+         */
+        public final Placeholder withRoleCapabilities(Role role) {
+            placeholderMap.put("role", role.getName());
+            placeholderMap.put("roleId", role.getIdLong());
+            placeholderMap.put("roleColor", role.getColorRaw());
+            placeholderMap.put("roleHoisted", role.isHoisted());
+            placeholderMap.put("roleMentionable", role.isMentionable());
+            placeholderMap.put("rolePublic", role.isPublicRole());
+
+            return this;
+        }
+
+        /**
+         * Adds user placeholders to the map.
+         * @param user The user used to add capabilities.
+         * @return this to allow for chaining.
+         */
+        public final Placeholder withUserCapabilities(User user) {
+            placeholderMap.put("user", user.getName());
+            placeholderMap.put("userId", user.getIdLong());
+            placeholderMap.put("userAvatar", user.getEffectiveAvatarUrl());
+            placeholderMap.put("userIsBot", user.isBot());
 
             return this;
         }

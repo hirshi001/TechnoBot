@@ -69,10 +69,4 @@ public class AutomodListener extends ListenerAdapter {
             }
         }
     }
-
-    public boolean hasRole(Member member, String roleName) {
-        return member.getRoles().stream()
-                       .filter(role -> role.getName().equals(roleName))
-                       .count() == 1;
-    }
 }

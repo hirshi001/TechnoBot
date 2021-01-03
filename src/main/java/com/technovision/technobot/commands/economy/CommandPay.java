@@ -35,6 +35,14 @@ public class CommandPay extends Command {
                 event.getChannel().sendMessage(embed.build()).queue();
                 return true;
             }
+
+            if (receiver == event.getAuthor()) {
+                embed.setColor(ERROR_EMBED_COLOR);
+                embed.setDescription(":x: You cannot trade money with yourself. That would be pointless.");
+                event.getChannel().sendMessage(embed.build()).queue();
+                return true;
+            }
+
             try {
                 long amt = Long.parseLong(args[1]);
                 try {

@@ -27,7 +27,7 @@ public class CommandCrime extends Command {
         if (System.currentTimeMillis() >= timestamp + cooldown) {
             Random rand = ThreadLocalRandom.current();
             embed.setAuthor(event.getAuthor().getAsTag(), null, event.getAuthor().getEffectiveAvatarUrl());
-            if (rand.nextInt(10) > 5) { //40% Success Rate
+            if (rand.nextInt(100) <= 40) { //40% Success Rate
                 int amount = rand.nextInt(450) + 250;
                 bot.getEconomy().addMoney(event.getAuthor(), amount, EconManager.Activity.CRIME);
                 embed.setColor(EconManager.SUCCESS_COLOR);

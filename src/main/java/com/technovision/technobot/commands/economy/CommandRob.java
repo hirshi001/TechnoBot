@@ -53,6 +53,13 @@ public class CommandRob extends Command {
             return true;
         }
 
+        if (victim == event.getAuthor()) {
+            embed.setColor(ERROR_EMBED_COLOR);
+            embed.setDescription(":x: You cannot rob yourself!");
+            event.getChannel().sendMessage(embed.build()).queue();
+            return true;
+        }
+
         JSONObject victimProfile = bot.getEconomy().getProfile(victim);
         JSONObject robberProfile = bot.getEconomy().getProfile(event.getAuthor());
         long timestamp = robberProfile.getLong("rob-timestamp");

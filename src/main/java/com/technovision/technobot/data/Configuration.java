@@ -10,29 +10,28 @@ import java.util.Scanner;
 
 /**
  * JSON Configuration
+ *
  * @author Sparky
  */
 public class Configuration implements DataSave {
-    /**
-     * The cached JSON in this instance
-     */
-    private JSONObject json;
     /**
      * The directory File.
      */
     private final File directory;
     private final String fileName;
-    private String filePath;
+    /**
+     * The cached JSON in this instance
+     */
+    private JSONObject json;
 
     public Configuration(String filePath, String fileName) {
         json = new JSONObject();
 
         this.fileName = fileName;
-        this.filePath = filePath;
 
         directory = new File(filePath);
 
-        if(!directory.exists()&&!directory.mkdirs()) {
+        if (!directory.exists() && !directory.mkdirs()) {
             // TODO: 7/14/2020 Logger#severe (see line 48/61)
         }
         load();
@@ -40,36 +39,39 @@ public class Configuration implements DataSave {
     }
 
     @Override
-    public JSONObject getJson() {return json;}
+    public JSONObject getJson() {
+        return json;
+    }
 
     @Override
     public void load() {
         StringBuilder jsonStr = new StringBuilder();
 
-        File t = new File(directory.getPath()+"/"+fileName);
-        if(!t.exists()) {
+        File t = new File(directory.getPath() + "/" + fileName);
+        if (!t.exists()) {
             try {
+                //noinspection ResultOfMethodCallIgnored
                 t.createNewFile();
-            } catch(IOException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
 
         try {
-            Scanner scanner = new Scanner(new File(directory.getPath()+"/"+fileName));
+            Scanner scanner = new Scanner(new File(directory.getPath() + "/" + fileName));
             scanner.reset();
 
-            while(scanner.hasNextLine()) {
+            while (scanner.hasNextLine()) {
                 jsonStr.append(scanner.nextLine());
             }
             scanner.close();
         } catch (FileNotFoundException e) {
-            // TODO: 7/14/2020 Logger#severe(new RuntimeException("An internal error occured while loading "+directory.getPath()+fileName+"!", e));
+            // TODO: 7/14/2020 Logger#severe(new RuntimeException("An internal error occurred while loading "+directory.getPath()+fileName+"!", e));
             e.printStackTrace();
             jsonStr.append("{}");
         }
 
-        if(jsonStr.toString().equalsIgnoreCase("")) jsonStr.append("{}");
+        if (jsonStr.toString().equalsIgnoreCase("")) jsonStr.append("{}");
 
         json = new JSONObject(jsonStr.toString());
     }
@@ -77,7 +79,7 @@ public class Configuration implements DataSave {
     @Override
     public void save() {
         try {
-            FileWriter writer = new FileWriter(directory.getPath()+"/"+fileName);
+            FileWriter writer = new FileWriter(directory.getPath() + "/" + fileName);
             writer.write(json.toString(4));
             writer.flush();
             writer.close();

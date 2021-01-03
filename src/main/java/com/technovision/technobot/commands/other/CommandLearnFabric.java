@@ -7,7 +7,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 import java.util.Date;
 
-public class CommandLearnFabric extends Command{
+public class CommandLearnFabric extends Command {
 
     public CommandLearnFabric(final TechnoBot bot) {
         super(bot,"learnfabric", "Important links and info for learning fabric.", "{prefix}learnfabric", Category.OTHER);

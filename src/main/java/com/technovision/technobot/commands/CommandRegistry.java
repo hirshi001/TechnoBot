@@ -2,6 +2,7 @@ package com.technovision.technobot.commands;
 
 import com.technovision.technobot.TechnoBot;
 import com.technovision.technobot.commands.economy.*;
+import com.technovision.technobot.commands.fun.CommandSay;
 import com.technovision.technobot.commands.levels.CommandLeaderboard;
 import com.technovision.technobot.commands.levels.CommandRank;
 import com.technovision.technobot.commands.levels.CommandRankcard;
@@ -10,10 +11,10 @@ import com.technovision.technobot.commands.other.*;
 import com.technovision.technobot.commands.staff.*;
 import com.technovision.technobot.commands.tickets.CommandTicketMessage;
 import com.technovision.technobot.commands.tickets.CommandTicketSettings;
-import com.technovision.technobot.listeners.managers.MusicManager;
 
 /**
  * Registers commands and their execution.
+ *
  * @author TechnoVision
  * @author Sparky
  */
@@ -35,6 +36,7 @@ public class CommandRegistry {
                 new CommandRob(bot),
                 new CommandDeposit(bot),
                 new CommandWithdraw(bot),
+                new CommandBalTop(bot),
 
                 // Music
                 new CommandJoin(bot),
@@ -42,7 +44,19 @@ public class CommandRegistry {
                 new CommandPlay(bot),
                 new CommandQueue(bot),
                 new CommandSkip(bot),
-                new CommandSkipto(bot),
+                new CommandSkipTo(bot),
+                new CommandNp(bot),
+                new CommandSeek(bot),
+                new CommandLoop(bot),
+                new CommandPause(bot),
+                new CommandResume(bot),
+                new CommandDj(bot),
+                new CommandShuffle(bot),
+                new CommandVolume(bot),
+
+                new CommandQueue(bot),
+                new CommandSkip(bot),
+                new CommandSkipTo(bot),
                 new CommandNp(bot),
                 new CommandSeek(bot),
                 new CommandLoop(bot),
@@ -64,7 +78,7 @@ public class CommandRegistry {
                 new CommandConsider(bot),
                 new CommandImplement(bot),
                 new CommandClear(bot),
-                new CommandUnmute(bot, null),
+                new CommandUnmute(bot),
 
                 // Other
                 new CommandHelp(bot),
@@ -78,7 +92,10 @@ public class CommandRegistry {
 
                 // Tickets
                 new CommandTicketMessage(bot),
-                new CommandTicketSettings(bot)
+                new CommandTicketSettings(bot),
+
+                // Fun
+                new CommandSay(bot)
         );
     }
 }

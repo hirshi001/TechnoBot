@@ -14,40 +14,59 @@ public class AutomodListener extends ListenerAdapter {
 
     public static final String ADVERTISE_CHANNEL = "advertise";
     private final AutoModLogger LOGGER;
-    private final TechnoBot bot;
 
     public AutomodListener(final TechnoBot bot) {
-        this.bot = bot;
         LOGGER = bot.getAutoModLogger();
     }
 
     @Override
     public void onMessageReceived(@Nonnull MessageReceivedEvent event) {
         String message = event.getMessage().getContentRaw();
-        if (event.getAuthor().isBot()) {
-            return;
-        }
-        if (event.getMessage().getMentionedMembers().size() > 0) {
-            if (event.getMessage().getMentionedMembers().contains(event.getGuild().getMemberById(595024631438508070L))) {
-                if (event.getMember().hasPermission(Permission.KICK_MEMBERS)) { return; }
-                TextChannel channel = event.getGuild().getTextChannelsByName("RULES-AND-INFO", true).get(0);
-                event.getMessage().delete().queue();
-                event.getChannel().sendMessage("<@!" + event.getAuthor().getIdLong() + ">, do not ping TechnoVision! <#" + channel.getId() + ">").queue();
-                LOGGER.log(event.getGuild(), event.getTextChannel(), event.getAuthor(), event.getJDA().getSelfUser(), AutoModLogger.Infraction.PING);
-            }
-        } else if (message.toLowerCase().contains("discord.gg/")) {
-            if (!event.getChannel().getName().equals(ADVERTISE_CHANNEL)) {
-                event.getMessage().delete().queue();
-                TextChannel channel = event.getGuild().getTextChannelsByName("RULES-AND-INFO", true).get(0);
-                event.getChannel().sendMessage("<@!" + event.getAuthor().getId() + ">, " + "you are not allowed to advertise in this channel! <#" + channel.getId() + ">").queue();
-                LOGGER.log(event.getGuild(), event.getTextChannel(), event.getAuthor(), event.getJDA().getSelfUser(), AutoModLogger.Infraction.INVITE);
-            }
-        }
-    }
 
-    public boolean hasRole(Member member, String roleName) {
-        return member.getRoles().stream()
-                       .filter(role -> role.getName().equals(roleName))
-                       .count() == 1;
+        if (!event.getAuthor().isBot()) {
+            if (event.getMessage().getMentionedMembers().size() > 0) {
+                // Techno's ID
+                long userId = 595024631438508070L;
+
+                if (event.getMessage().getMentionedMembers().contains(event.getGuild().getMemberById(userId))) {
+                    if (!event.getMember().hasPermission(Permission.KICK_MEMBERS)) {
+                        TextChannel channel = event.getGuild().getTextChannelsByName("RULES-AND-INFO", true).get(0);
+
+                        event.getMessage().delete().queue();
+
+                        event.getChannel()
+                                .sendMessage(String.format("<@!%d>, do not ping TechnoVision! <#%s>",
+                                        event.getAuthor().getIdLong(),
+                                        channel.getId()))
+                                .queue();
+
+                        LOGGER.log(event.getGuild(),
+                                event.getTextChannel(),
+                                event.getAuthor(),
+                                event.getJDA().getSelfUser(),
+                                AutoModLogger.Infraction.PING);
+                    }
+                }
+            } else if (message.toLowerCase().contains("discord.gg/")) {
+                if (!event.getChannel().getName().equals(ADVERTISE_CHANNEL)) {
+                    event.getMessage().delete().queue();
+
+                    TextChannel channel = event.getGuild().getTextChannelsByName("RULES-AND-INFO", true).get(0);
+
+                    event.getChannel()
+                            .sendMessage(
+                                    String.format("<@!%s>, you are not allowed to advertise in this channel! <#%s>",
+                                            event.getAuthor().getId(),
+                                            channel.getId()))
+                            .queue();
+
+                    LOGGER.log(event.getGuild(),
+                            event.getTextChannel(),
+                            event.getAuthor(),
+                            event.getJDA().getSelfUser(),
+                            AutoModLogger.Infraction.INVITE);
+                }
+            }
+        }
     }
 }

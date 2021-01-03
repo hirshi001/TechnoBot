@@ -13,7 +13,8 @@ public class CommandTicketMessage extends Command {
 
     @Override
     public boolean execute(MessageReceivedEvent event, String[] args) {
-        if(event.getMember().hasPermission(Permission.KICK_MEMBERS)) bot.getTicketManager().createReactionMessage(event.getGuild(), event.getChannel());
+        if (event.getMember().hasPermission(Permission.KICK_MEMBERS))
+            bot.getTicketManager().createReactionMessage(event.getGuild(), event.getChannel());
         else event.getChannel().sendMessage("❌ You cannot do that!").queue();
         return true;
     }

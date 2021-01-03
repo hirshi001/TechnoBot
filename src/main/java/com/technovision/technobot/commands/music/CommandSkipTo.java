@@ -8,17 +8,17 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class CommandSkipto extends Command {
+public class CommandSkipTo extends Command {
     private final MusicManager musicManager;
 
-    public CommandSkipto(final TechnoBot bot) {
+    public CommandSkipTo(final TechnoBot bot) {
         super(bot,"skipto", "Skips to song index in queue", "{prefix}skipto <number>", Command.Category.MUSIC);
         this.musicManager = bot.getMusicManager();
     }
 
     @Override
     public boolean execute(MessageReceivedEvent event, String[] args) {
-        if(musicManager.handlers.get(event.getGuild().getIdLong())==null||musicManager.handlers.get(event.getGuild().getIdLong()).trackScheduler.getQueueCopy().size()==0) {
+        if (musicManager.handlers.get(event.getGuild().getIdLong()) == null || musicManager.handlers.get(event.getGuild().getIdLong()).trackScheduler.getQueueCopy().size() == 0) {
             event.getChannel().sendMessage("There are no songs playing.").queue();
             return true;
         }
@@ -26,15 +26,15 @@ public class CommandSkipto extends Command {
         try {
             MusicManager.TrackScheduler scheduler = musicManager.handlers.get(event.getGuild().getIdLong()).trackScheduler;
             int queueSize = scheduler.getQueueCopy().size();
-            if (Integer.parseInt(args[0]) >= queueSize || Integer.parseInt(args[0]) <= 0 ) {
+            if (Integer.parseInt(args[0]) >= queueSize || Integer.parseInt(args[0]) <= 0) {
                 event.getChannel().sendMessage("That is not a valid track number!").queue();
                 return true;
             }
             scheduler.skipTo(Math.min(Integer.parseInt(args[0]), queueSize));
-        } catch(IndexOutOfBoundsException e) {
+        } catch (IndexOutOfBoundsException e) {
             event.getChannel().sendMessage("Please specify a position to skip to!").queue();
             return true;
-        } catch(NumberFormatException e) {
+        } catch (NumberFormatException e) {
             event.getChannel().sendMessage("That is not a number!").queue();
             return true;
         }
@@ -42,7 +42,7 @@ public class CommandSkipto extends Command {
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
-                event.getChannel().sendMessage("Skipped to "+musicManager.handlers.get(event.getGuild().getIdLong()).trackScheduler.getQueueCopy().get(0).getInfo().title).queue();
+                event.getChannel().sendMessage("Skipped to " + musicManager.handlers.get(event.getGuild().getIdLong()).trackScheduler.getQueueCopy().get(0).getInfo().title).queue();
             }
         }, 1000L);
 

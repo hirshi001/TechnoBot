@@ -15,9 +15,8 @@ import javax.annotation.Nonnull;
 import java.util.Date;
 
 /**
- * Bot Log Handler.
- * Listens to various actions and
- * logs them to a specified channel.
+ * Bot Log Handler. Listens to various actions and logs them to a specified channel.
+ *
  * @author Sparky
  */
 public class GuildLogEventListener extends ListenerAdapter {
@@ -26,11 +25,8 @@ public class GuildLogEventListener extends ListenerAdapter {
     public static final int GREEN = 0x53ddac;
 
     private final WebhookClient webhook;
-    
-    private final TechnoBot bot;
-    
+
     public GuildLogEventListener(final TechnoBot bot) {
-        this.bot = bot;
         webhook = new WebhookClientBuilder(bot.getBotConfig().getJson().getString("guildlogs-webhook")).build();
     }
 
@@ -39,10 +35,12 @@ public class GuildLogEventListener extends ListenerAdapter {
         webhook.send(new WebhookEmbedBuilder() {{
             setTitle(new WebhookEmbed.EmbedTitle("New Role Created", null));
             setColor(GREEN);
+
             setDescription("**Name:** " + event.getRole().getName() +
-                    "\n**Color:** #" + event.getRole().getColorRaw() +
-                    "\n**Mentionable:** " + event.getRole().isMentionable() +
-                    "\n**Displayed Separately:** " + event.getRole().isHoisted());
+                           "\n**Color:** #" + event.getRole().getColorRaw() +
+                           "\n**Mentionable:** " + event.getRole().isMentionable() +
+                           "\n**Displayed Separately:** " + event.getRole().isHoisted());
+
             setFooter(new WebhookEmbed.EmbedFooter("Role ID: " + event.getRole().getIdLong(), null));
             setTimestamp(new Date().toInstant());
         }}.build());
@@ -54,10 +52,10 @@ public class GuildLogEventListener extends ListenerAdapter {
             setTitle(new WebhookEmbed.EmbedTitle("Role \"" + event.getRole().getName() + "\" Removed", null));
             setColor(RED);
             setDescription("**Name:** " + event.getRole().getName() +
-                    "\n**Color:** #" + event.getRole().getColorRaw() +
-                    "\n**Mentionable:** " + event.getRole().isMentionable() +
-                    "\n**Displayed Separately:** " + event.getRole().isHoisted() +
-                    "\n**Position:** " + event.getRole().getPositionRaw());
+                           "\n**Color:** #" + event.getRole().getColorRaw() +
+                           "\n**Mentionable:** " + event.getRole().isMentionable() +
+                           "\n**Displayed Separately:** " + event.getRole().isHoisted() +
+                           "\n**Position:** " + event.getRole().getPositionRaw());
             setFooter(new WebhookEmbed.EmbedFooter("Role ID: " + event.getRole().getIdLong(), null));
             setTimestamp(new Date().toInstant());
         }}.build());
@@ -65,12 +63,15 @@ public class GuildLogEventListener extends ListenerAdapter {
 
     @Override
     public void onTextChannelDelete(@Nonnull TextChannelDeleteEvent event) {
-        if (event.getChannel().getParent().getIdLong() == 789008117970108437L) { return; }
+        if (event.getChannel().getParent().getIdLong() == 789008117970108437L) {
+            return;
+        }
+
         webhook.send(new WebhookEmbedBuilder() {{
             setTitle(new WebhookEmbed.EmbedTitle("Text Channel Deleted", null));
             setColor(RED);
             setDescription("**Name:** " + event.getChannel().getName() +
-                    "\n**Category:** " + event.getChannel().getParent().getName());
+                           "\n**Category:** " + event.getChannel().getParent().getName());
             setFooter(new WebhookEmbed.EmbedFooter("Channel ID: " + event.getChannel().getIdLong(), null));
             setTimestamp(new Date().toInstant());
         }}.build());
@@ -78,12 +79,15 @@ public class GuildLogEventListener extends ListenerAdapter {
 
     @Override
     public void onTextChannelCreate(@Nonnull TextChannelCreateEvent event) {
-        if (event.getChannel().getParent().getIdLong() == 789008117970108437L) { return; }
+        if (event.getChannel().getParent().getIdLong() == 789008117970108437L) {
+            return;
+        }
+
         webhook.send(new WebhookEmbedBuilder() {{
             setTitle(new WebhookEmbed.EmbedTitle("Text Channel Created", null));
             setColor(GREEN);
             setDescription("**Name:** " + event.getChannel().getName() +
-                    "\n**Category:** " + event.getChannel().getParent().getName());
+                           "\n**Category:** " + event.getChannel().getParent().getName());
             setFooter(new WebhookEmbed.EmbedFooter("Channel ID: " + event.getChannel().getIdLong(), null));
             setTimestamp(new Date().toInstant());
         }}.build());

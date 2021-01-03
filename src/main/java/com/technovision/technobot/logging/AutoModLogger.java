@@ -31,12 +31,14 @@ public class AutoModLogger {
                 desc += "**Reason:** " + reason;
                 desc += "\n**Moderator:** " + moderator.getAsTag();
                 break;
+
             case KICK:
                 embed.setColor(GuildLogEventListener.RED);
                 embed.setTitle("Kicked " + offender.getAsTag());
                 desc += "**Reason:** " + reason;
                 desc += "\n**Moderator:** " + moderator.getAsTag();
                 break;
+
             case WARN:
                 embed.setColor(Command.EMBED_COLOR);
                 embed.setTitle("Warned " + offender.getAsTag());
@@ -44,22 +46,26 @@ public class AutoModLogger {
                 desc += "\n**Reason:** " + reason;
                 desc += "\n**Moderator:** " + moderator.getAsTag();
                 break;
+
             case MUTE:
                 embed.setColor(GuildLogEventListener.RED);
                 embed.setTitle("Muted " + offender.getAsTag());
                 desc += "**Reason:** " + reason;
                 desc += "\n**Moderator:** " + moderator.getAsTag();
                 break;
+
             case UNMUTE:
                 embed.setColor(Command.EMBED_COLOR);
                 embed.setTitle("Un-Muted " + offender.getAsTag());
                 desc += "\n**Moderator:** " + moderator.getAsTag();
                 break;
         }
+
         embed.setThumbnail(offender.getEffectiveAvatarUrl());
         embed.setDescription(desc);
         embed.setTimestamp(new Date().toInstant());
         guild.getTextChannelsByName(public_log_channel, true).get(0).sendMessage(embed.build()).queue();
+
         embed.clear();
     }
 
@@ -75,6 +81,7 @@ public class AutoModLogger {
                 desc += "\n**Reason:** Automatic action carried out for pinging TechnoVision.";
                 desc += "\n**Moderator:** " + moderator.getAsTag();
                 break;
+
             case INVITE:
                 embed.setTitle("Invalid Advertisement");
                 desc += "**Channel:** <#" + channel.getIdLong() + ">";
@@ -82,6 +89,7 @@ public class AutoModLogger {
                 desc += "\n**Reason:** Automatic action carried out for posting an invite.";
                 desc += "\n**Moderator:** " + moderator.getAsTag();
                 break;
+
             case SWEAR:
                 embed.setTitle("Racism & Profanity");
                 desc += "**Channel:** <#" + channel.getIdLong() + ">";
@@ -89,16 +97,19 @@ public class AutoModLogger {
                 desc += "\n**Reason:** Automatic action carried out for using a blacklisted word.";
                 desc += "\n**Moderator:** " + moderator.getAsTag();
                 break;
+
             case CLEAR:
                 embed.setTitle("Channel Purge");
                 desc += "**Channel:** <#" + channel.getIdLong() + ">";
                 desc += "\n**Moderator:** " + offender.getAsTag();
                 break;
+
         }
         embed.setThumbnail(offender.getEffectiveAvatarUrl());
         embed.setDescription(desc);
         embed.setTimestamp(new Date().toInstant());
         guild.getTextChannelsByName(log_channel, true).get(0).sendMessage(embed.build()).queue();
+
         embed.clear();
     }
 

@@ -104,7 +104,7 @@ public class CommandMute extends Command {
             return true;
         }
         if (executor.getUser().getId().equalsIgnoreCase(target.getUser().getId())) {
-            event.getChannel().sendMessage("You can't mute yourself \uD83E\uDD26\u200D").queue();
+            event.getChannel().sendMessage("You can't mute yourself 🤦‍").queue();
             return true;
         }
         if (!executor.canInteract(target)) {
@@ -196,9 +196,7 @@ public class CommandMute extends Command {
 
         event.getChannel().sendMessage(new EmbedBuilder()
                 .setAuthor(target.getUser().getAsTag() + " has been muted", null, target.getUser().getEffectiveAvatarUrl())
-                .setDescription("**Reason:** " + reason.replaceAll("`","")).build()).queue(msg -> {
-                    bot.getAutoModLogger().log(event.getGuild(), event.getTextChannel(), target.getUser(), event.getAuthor(), AutoModLogger.Infraction.MUTE, reason);
-        });
+                .setDescription("**Reason:** " + reason.replaceAll("`","")).build()).queue(msg -> bot.getAutoModLogger().log(event.getGuild(), event.getTextChannel(), target.getUser(), event.getAuthor(), AutoModLogger.Infraction.MUTE, reason));
     }
 
     @Override

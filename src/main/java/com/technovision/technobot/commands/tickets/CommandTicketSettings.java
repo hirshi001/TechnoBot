@@ -19,8 +19,8 @@ public class CommandTicketSettings extends Command {
             if (args.length == 0) {
                 GuildChannel inboxChannel = bot.getTicketManager().getInboxChannel(event.getGuild());
                 event.getChannel().sendMessage(new EmbedBuilder()
-                        .setTitle("\uD83C\uDF9F Ticket Settings")
-                        .addField("\uD83D\uDCE8 Inbox Channel (inbox-channel)", ((inboxChannel != null) ? inboxChannel.getName() : "None"), true)
+                        .setTitle("🎟 Ticket Settings")
+                        .addField("📨 Inbox Channel (inbox-channel)", ((inboxChannel != null) ? inboxChannel.getName() : "None"), true)
                         .setFooter("Change values with \"ticketsettings (name in parenthesis) (value)")
                         .build()
                 ).queue();
@@ -28,7 +28,7 @@ public class CommandTicketSettings extends Command {
                 if (args[0].equalsIgnoreCase("inbox-channel")) {
                     try {
                         bot.getTicketManager().setInboxChannel(event.getGuild(), event.getGuild().getTextChannelsByName(args[1], true).get(0));
-                        event.getChannel().sendMessage("\uD83D\uDCE8 Successfully set the channel!").queue();
+                        event.getChannel().sendMessage("📨 Successfully set the channel!").queue();
                     } catch (StringIndexOutOfBoundsException e) {
                         event.getChannel().sendMessage("Please specify a channel name!").queue();
                     } catch (Exception e) {

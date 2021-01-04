@@ -52,7 +52,7 @@ public class CommandWarn extends Command {
             return true;
         }
         if (executor.getUser().getId().equalsIgnoreCase(target.getUser().getId())) {
-            event.getChannel().sendMessage("You can't warn yourself \uD83E\uDD26\u200D").queue();
+            event.getChannel().sendMessage("You can't warn yourself 🤦").queue();
             return true;
         }
         if (!executor.canInteract(target)) {
@@ -88,9 +88,7 @@ public class CommandWarn extends Command {
         String finalReason = reason;
         event.getChannel().sendMessage(new EmbedBuilder()
                 .setAuthor(target.getUser().getAsTag() + " has been warned", null, target.getUser().getEffectiveAvatarUrl())
-                .setDescription("**Reason:** " + reason.replaceAll("`","")).build()).queue(msg -> {
-                    bot.getAutoModLogger().log(event.getGuild(), event.getTextChannel(), finalTarget.getUser(), event.getAuthor(), AutoModLogger.Infraction.WARN, finalReason);
-        });
+                .setDescription("**Reason:** " + reason.replaceAll("`","")).build()).queue(msg -> bot.getAutoModLogger().log(event.getGuild(), event.getTextChannel(), finalTarget.getUser(), event.getAuthor(), AutoModLogger.Infraction.WARN, finalReason));
       
         return true;
     }

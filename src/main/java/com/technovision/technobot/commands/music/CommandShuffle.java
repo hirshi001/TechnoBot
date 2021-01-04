@@ -20,7 +20,7 @@ public class CommandShuffle extends Command {
             return true;
         }
         musicManager.handlers.get(event.getGuild().getIdLong()).trackScheduler.shuffle();
-        event.getChannel().sendMessage("\uD83D\uDD00 Shuffled Queue!").queue();
+        event.getChannel().sendMessage("🔀 Shuffled Queue!").queue();
         return true;
     }
 }

@@ -64,26 +64,37 @@ public class MusicManager extends ListenerAdapter {
     @Override
     public void onGuildMessageReactionAdd(@Nonnull GuildMessageReactionAddEvent event) {
         if (!djMessages.containsKey(event.getUser())) return;
+
         if (event.getMessageIdLong() == djMessages.get(event.getUser()).getIdLong()) {
             event.getReaction().removeReaction(event.getUser()).queue();
-            if (event.getReaction().getReactionEmote().getEmoji().equalsIgnoreCase("⏯")) {
-                handlers.get(event.getGuild().getIdLong()).trackScheduler.setPaused(!handlers.get(event.getGuild().getIdLong()).trackScheduler.isPaused());
-                MessageEmbed embed = djMessages.get(event.getUser()).getEmbeds().get(0);
-                TrackScheduler sch = handlers.get(event.getGuild().getIdLong()).trackScheduler;
-                EmbedBuilder builder = assembleEmbed(embed, sch);
-                djMessages.get(event.getUser()).editMessage(builder.build()).queue();
-            } else if (event.getReaction().getReactionEmote().getEmoji().equalsIgnoreCase("\uD83D\uDD02")) {
-                handlers.get(event.getGuild().getIdLong()).trackScheduler.toggleLoop(null);
-                MessageEmbed embed = djMessages.get(event.getUser()).getEmbeds().get(0);
-                TrackScheduler sch = handlers.get(event.getGuild().getIdLong()).trackScheduler;
-                EmbedBuilder builder = assembleEmbed(embed, sch);
-                djMessages.get(event.getUser()).editMessage(builder.build()).queue();
-            } else if (event.getReaction().getReactionEmote().getEmoji().equalsIgnoreCase("⏭")) {
-                handlers.get(event.getGuild().getIdLong()).trackScheduler.skip();
-            } else if (event.getReaction().getReactionEmote().getEmoji().equalsIgnoreCase("\uD83D\uDD01")) {
-                handlers.get(event.getGuild().getIdLong()).trackScheduler.toggleLoopQueue(null);
-            } else if (event.getReaction().getReactionEmote().getEmoji().equalsIgnoreCase("\uD83D\uDD00")) {
-                handlers.get(event.getGuild().getIdLong()).trackScheduler.shuffle();
+
+            switch (event.getReaction().getReactionEmote().getEmoji()) {
+                case "⏯":
+                    handlers.get(event.getGuild().getIdLong()).trackScheduler.setPaused(!handlers.get(event.getGuild().getIdLong()).trackScheduler.isPaused());
+
+                    MessageEmbed pausePlayEmbed = djMessages.get(event.getUser()).getEmbeds().get(0);
+                    TrackScheduler pausePlayTrackScheduler = handlers.get(event.getGuild().getIdLong()).trackScheduler;
+                    EmbedBuilder pausePlayEmbedBuilder = assembleEmbed(pausePlayEmbed, pausePlayTrackScheduler);
+
+                    djMessages.get(event.getUser()).editMessage(pausePlayEmbedBuilder.build()).queue();
+
+                case "🔂":
+                    handlers.get(event.getGuild().getIdLong()).trackScheduler.toggleLoop(null);
+
+                    MessageEmbed loopEmbed = djMessages.get(event.getUser()).getEmbeds().get(0);
+                    TrackScheduler loopTrackScheduler = handlers.get(event.getGuild().getIdLong()).trackScheduler;
+                    EmbedBuilder loopEmbedBuilder = assembleEmbed(loopEmbed, loopTrackScheduler);
+
+                    djMessages.get(event.getUser()).editMessage(loopEmbedBuilder.build()).queue();
+
+                case "⏭":
+                    handlers.get(event.getGuild().getIdLong()).trackScheduler.skip();
+
+                case "🔁":
+                    handlers.get(event.getGuild().getIdLong()).trackScheduler.toggleLoopQueue(null);
+
+                case "🔀":
+                    handlers.get(event.getGuild().getIdLong()).trackScheduler.shuffle();
             }
         }
 
@@ -91,7 +102,7 @@ public class MusicManager extends ListenerAdapter {
     }
 
     public EmbedBuilder assembleEmbed(MessageEmbed embedOriginal, TrackScheduler sch) {
-        String[] posString = new String[]{"⎯", "⎯", "⎯", "⎯", "⎯", "⎯", "⎯", "⎯", "⎯", "⎯", "⎯", "⎯", "⎯", "⎯", "⎯", "⎯", "⎯", "⎯", "⎯", "⎯", "⎯", "⎯", "⎯", "⎯", "⎯", "⎯", "⎯", "⎯", "⎯", "⎯",};
+        String[] posString = {"⎯", "⎯", "⎯", "⎯", "⎯", "⎯", "⎯", "⎯", "⎯", "⎯", "⎯", "⎯", "⎯", "⎯", "⎯", "⎯", "⎯", "⎯", "⎯", "⎯", "⎯", "⎯", "⎯", "⎯", "⎯", "⎯", "⎯", "⎯", "⎯", "⎯",};
         try {
             posString[(int) Math.floor((float) sch.trackQueue.get(0).getPosition() / (float) sch.trackQueue.get(0).getDuration() * 30F)] = "◉";
         } catch (Exception e) {
@@ -157,6 +168,7 @@ public class MusicManager extends ListenerAdapter {
                     channel.sendMessage(":ballot_box_with_check: **" + audioTrack.getInfo().title + "** successfully added!").queue();
                     channel.sendMessage(embed.build()).queue();
                 }
+
                 handlers.get(guild.getIdLong()).trackScheduler.queue(audioTrack);
             }
 

@@ -49,7 +49,7 @@ public class CommandUnmute extends Command {
             return true;
         }
         if (executor.getUser().getId().equalsIgnoreCase(target.getUser().getId())) {
-            event.getChannel().sendMessage("You can't mute yourself \uD83E\uDD26\u200D").queue();
+            event.getChannel().sendMessage("You can't mute yourself 🤦").queue();
             return true;
         }
         if (!executor.canInteract(target)) {

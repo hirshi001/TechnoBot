@@ -52,20 +52,26 @@ public class EconManager {
             JSONObject profile = getProfile(user);
             long bal = profile.getLong("balance");
             long newBalance = 0;
+
             if (newBalance < 0) {
                 throw new InvalidBalanceException();
             }
+
             long bank = profile.getLong("bank");
+
             profile.put("bank", bank + bal);
             profile.put("balance", newBalance);
         } else if (amount.equalsIgnoreCase("half")) {
             JSONObject profile = getProfile(user);
             long bal = profile.getLong("balance");
             long newBalance = bal - (bal / 2);
+
             if (newBalance < 0) {
                 throw new InvalidBalanceException();
             }
+
             long bank = profile.getLong("bank");
+
             profile.put("bank", bank + (bal / 2));
             profile.put("balance", newBalance);
         }
@@ -75,10 +81,13 @@ public class EconManager {
         JSONObject profile = getProfile(user);
         long bank = profile.getLong("bank");
         long newBank = bank - amount;
+
         if (newBank < 0) {
             throw new InvalidBalanceException();
         }
+
         long bal = profile.getLong("balance");
+
         profile.put("bank", newBank);
         profile.put("balance", bal + amount);
     }
@@ -108,6 +117,7 @@ public class EconManager {
             }
 
             long bal = profile.getLong("balance");
+
             profile.put("bank", newBank);
             profile.put("balance", bal / 2);
         }
@@ -124,6 +134,7 @@ public class EconManager {
 
         removeMoney(victim, amount, Activity.NULL);
         addMoney(robber, amount, Activity.NULL);
+
         return amount;
     }
 

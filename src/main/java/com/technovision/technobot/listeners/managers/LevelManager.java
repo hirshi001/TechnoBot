@@ -3,6 +3,7 @@ package com.technovision.technobot.listeners.managers;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.technovision.technobot.TechnoBot;
+import com.technovision.technobot.commands.Command;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -43,7 +44,7 @@ public class LevelManager extends ListenerAdapter {
             return;
         }
 
-        if (event.getMessage().getContentRaw().startsWith("!")) {
+        if (event.getMessage().getContentRaw().startsWith(Command.PREFIX)) {
             return;
         }
 
@@ -103,7 +104,7 @@ public class LevelManager extends ListenerAdapter {
 
                 updates.add(new Document("$set", new Document("level", lvl)));
 
-                List<net.dv8tion.jda.api.entities.Role> roles = event.getMember().getRoles();
+                List<Role> roles = event.getMember().getRoles();
                 if (lvl >= 5) {
                     Role elite = event.getGuild().getRoleById(739995619904454707L);
 

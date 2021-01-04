@@ -15,7 +15,7 @@ import java.util.Date;
 
 public class StarboardManager extends ListenerAdapter {
 
-    public static final String EMOTE = "\u2B50";
+    public static final String EMOTE = "⭐";
     public static final long SHOWCASE = 790017209245368341L;
     public static final long STARBOARD = 790017510468223006L;
 

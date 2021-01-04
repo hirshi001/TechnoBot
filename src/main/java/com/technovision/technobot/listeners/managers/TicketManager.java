@@ -166,14 +166,14 @@ public class TicketManager extends ListenerAdapter {
         public void createReactionMessage(MessageChannel channel) {
             AtomicBoolean ret = new AtomicBoolean(false);
             channel.sendMessage(new EmbedBuilder()
-                    .setTitle("\uD83C\uDF9F Create a Support Ticket")
+                    .setTitle("🎟 Create a Support Ticket")
                     .setDescription("Need support, reporting a user, or requesting a ban appeal? Create a ticket by reacting with the emoji below and a staff member will be with you shortly!" +
                                     "\n\n**DO NOT USE THIS FOR CODING SUPPORT!**\n*For help with code, please use a support channel.*" +
-                                    "\n\n**To Create a Ticket React With** \uD83C\uDF9F")
+                                    "\n\n**To Create a Ticket React With** 🎟")
                     .setFooter("TechnoVision Discord", "https://i.imgur.com/TzHOnJu.png")
                     .setColor(Command.EMBED_COLOR)
                     .build()
-            ).queue(message -> message.addReaction("\uD83C\uDF9F").queue(aVoid -> {
+            ).queue(message -> message.addReaction("🎟").queue(aVoid -> {
                 reactionMessage = message;
                 ret.set(true);
                 save();
@@ -210,7 +210,7 @@ public class TicketManager extends ListenerAdapter {
                 String s = TranscriptUtils.threadToTranscript(messages);
                 tickets.remove(ticket);
                 MessageAction msg = inboxChannel.sendMessage(new EmbedBuilder()
-                        .setTitle("\uD83D\uDD12 Ticket #" + ticket.idFormatted() + " Closed")
+                        .setTitle("🔒 Ticket #" + ticket.idFormatted() + " Closed")
                         .setColor(Command.ERROR_EMBED_COLOR)
                         .build());
                 if (saveTranscript) {
@@ -275,12 +275,12 @@ public class TicketManager extends ListenerAdapter {
             Guild guild = guildTicketManager.guild;
             Category category = null;
             try {
-                category = guild.getCategoriesByName("\uD83D\uDCE5 Tickets", true).get(0);
+                category = guild.getCategoriesByName("📥 Tickets", true).get(0);
             } catch (Exception ignored) {
             }
 
             try {
-                if (category == null) category = guild.createCategory("\uD83D\uDCE5 Tickets").complete(true);
+                if (category == null) category = guild.createCategory("📥 Tickets").complete(true);
             } catch (Exception e) {
                 logger.log(Logger.LogLevel.SEVERE, e.getMessage());
                 e.printStackTrace();
@@ -294,12 +294,12 @@ public class TicketManager extends ListenerAdapter {
                 //Create Ticket Message
                 channel.sendMessage(new EmbedBuilder()
                         .setTitle("Support Ticket ")
-                        .setDescription("A staff member will be with you shortly! Please take this time to clearly describe your issue, report, or appeal in the chat below.\n\nTo close this ticket, react with \uD83D\uDD12")
+                        .setDescription("A staff member will be with you shortly! Please take this time to clearly describe your issue, report, or appeal in the chat below.\n\nTo close this ticket, react with 🔒")
                         .setFooter("TechnoVision Discord", "https://i.imgur.com/TzHOnJu.png")
                         .setColor(Color.CYAN)
                         .build()
                 ).queue(message -> {
-                    message.addReaction("\uD83D\uDD12").queue();
+                    message.addReaction("🔒").queue();
                     ((GuildChannel) channel).upsertPermissionOverride(opener).grant(Permission.VIEW_CHANNEL).queue();
                     ((GuildChannel) channel).upsertPermissionOverride(guild.getRoleById("599344898856189984")).grant(Permission.VIEW_CHANNEL).queue();
                     splashMessage = message;
@@ -307,7 +307,7 @@ public class TicketManager extends ListenerAdapter {
 
                 //Alert Staff
                 guildTicketManager.inboxChannel.sendMessage(new EmbedBuilder()
-                        .setTitle("\uD83D\uDCE8 Ticket #" + idFormatted() + " Opened")
+                        .setTitle("📨 Ticket #" + idFormatted() + " Opened")
                         .setColor(EconManager.SUCCESS_COLOR)
                         .build()
                 ).queue();
@@ -344,14 +344,14 @@ public class TicketManager extends ListenerAdapter {
             locked = true;
             ((GuildChannel) channel).upsertPermissionOverride(opener).deny(Permission.VIEW_CHANNEL).queue();
             channel.sendMessage(new EmbedBuilder()
-                    .setDescription("\uD83D\uDCD1 Save Transcript" +
-                                    "\n\uD83D\uDD13 Reopen Ticket" +
-                                    "\n\u26D4 Delete Ticket")
+                    .setDescription("📑 Save Transcript" +
+                                    "\n🔓 Reopen Ticket" +
+                                    "\n⛔ Delete Ticket")
                     .setColor(Command.ERROR_EMBED_COLOR)
                     .build()).queue(message -> {
-                message.addReaction("\uD83D\uDCD1").queue();
-                message.addReaction("\uD83D\uDD13").queue();
-                message.addReaction("\u26D4").queue();
+                message.addReaction("📑").queue();
+                message.addReaction("🔓").queue();
+                message.addReaction("⛔").queue();
             });
             guildTicketManager.save();
         }
@@ -386,17 +386,17 @@ public class TicketManager extends ListenerAdapter {
             if (event.getChannel().getIdLong() == channel.getIdLong()) {
                 event.getReaction().removeReaction(event.getUser()).queue();
                 switch (event.getReactionEmote().getEmoji()) {
-                    case "\uD83D\uDD12": //Lock
+                    case "🔒": //Lock
                         lock(event.getUser());
                         break;
-                    case "\uD83D\uDD13": //Unlock
+                    case "🔓": //Unlock
                         if (event.getMember().hasPermission(Permission.KICK_MEMBERS)) {
                             if (locked) {
                                 unlock(event.getUser());
                             }
                         }
                         break;
-                    case "\u26D4": //Close
+                    case "⛔": //Close
                         if (event.getMember().hasPermission(Permission.KICK_MEMBERS)) {
                             closing = true;
                             event.getChannel().sendMessage(new EmbedBuilder()
@@ -411,7 +411,7 @@ public class TicketManager extends ListenerAdapter {
                             }, 5000);
                         }
                         break;
-                    case "\uD83D\uDCD1":
+                    case "📑":
                         channel.sendMessage(new EmbedBuilder()
                                 .setDescription("Transcript has been saved!")
                                 .setColor(0xEAE408)

@@ -26,8 +26,8 @@ public class CommandSuggest extends Command {
             embed.setColor(EMBED_COLOR);
             TextChannel channel = event.getGuild().getTextChannelsByName("SUGGESTIONS", true).get(0);
             channel.sendMessage(embed.build()).queue(message -> {
-                message.addReaction("\u2B06\uFE0F").queue();
-                message.addReaction("\u2B07\uFE0F").queue();
+                message.addReaction("⬆️").queue();
+                message.addReaction("⬇️").queue();
                 bot.getSuggestionManager().addSuggestion(message.getId());
             });
             EmbedBuilder response = new EmbedBuilder()

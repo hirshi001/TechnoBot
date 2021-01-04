@@ -51,7 +51,7 @@ public class CommandBan extends Command {
             return true;
         }
         if (executor.getUser().getId().equalsIgnoreCase(target.getUser().getId())) {
-            event.getChannel().sendMessage("You can't ban yourself \uD83E\uDD26\u200D").queue();
+            event.getChannel().sendMessage("You can't ban yourself 🤦‍").queue();
             return true;
         }
         if (!executor.canInteract(target)) {

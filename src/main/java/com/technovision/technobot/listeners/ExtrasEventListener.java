@@ -88,7 +88,7 @@ public class ExtrasEventListener extends ListenerAdapter {
             }
 
             event.getChannel().sendMessage(reply).queue();
-            event.getMessage().addReaction("\uD83D\uDE20").queue();
+            event.getMessage().addReaction("😠").queue();
             triggered = true;
 
         } else if (msg.toLowerCase().contains("forge") && (msg.toLowerCase().contains("tutorials") || msg.toLowerCase().contains("support") || msg.toLowerCase().contains("help"))) {

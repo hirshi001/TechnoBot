@@ -46,9 +46,7 @@ public class CommandInfractions extends Command {
             }
         }
         if (target == null && args.length > 0) {
-            event.getGuild().retrieveMemberById(args[0]).queue(member -> {
-                complete(event, member);
-            });
+            event.getGuild().retrieveMemberById(args[0]).queue(member -> complete(event, member));
             return true;
         }
         if (target == null) {
@@ -81,9 +79,7 @@ public class CommandInfractions extends Command {
             Member m = event.getGuild().getMemberById(infraction.getLong("issuer"));
             if (m != null)
                 builder.addField(infraction.getString("type") + " At " + infraction.getString("date"), "Issued By: " + m.getUser().getAsTag() + "\nReason: " + infraction.getString("reason"), false);
-            else event.getGuild().retrieveMemberById(infraction.getLong("issuer")).queue(mem -> {
-                builder.addField(infraction.getString("type") + " At " + infraction.getString("date"), "Issued By: " + mem + "\nReason: " + infraction.getString("reason"), false);
-            });
+            else event.getGuild().retrieveMemberById(infraction.getLong("issuer")).queue(mem -> builder.addField(infraction.getString("type") + " At " + infraction.getString("date"), "Issued By: " + mem + "\nReason: " + infraction.getString("reason"), false));
         }
 
         event.getChannel().sendMessage(builder.build()).queue();

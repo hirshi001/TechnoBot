@@ -2,6 +2,7 @@ package com.technovision.technobot.commands;
 
 import com.technovision.technobot.TechnoBot;
 import com.technovision.technobot.commands.economy.*;
+import com.technovision.technobot.commands.fun.CommandRoll;
 import com.technovision.technobot.commands.fun.CommandSay;
 import com.technovision.technobot.commands.levels.CommandLeaderboard;
 import com.technovision.technobot.commands.levels.CommandRank;
@@ -95,7 +96,8 @@ public class CommandRegistry {
                 new CommandTicketSettings(bot),
 
                 // Fun
-                new CommandSay(bot)
+                new CommandSay(bot),
+                new CommandRoll(bot)
         );
     }
 }

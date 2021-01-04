@@ -10,6 +10,7 @@ import com.technovision.technobot.listeners.managers.*;
 import com.technovision.technobot.logging.AutoModLogger;
 import com.technovision.technobot.logging.Loggable;
 import com.technovision.technobot.logging.Logger;
+import com.technovision.technobot.util.BotLocalization;
 import com.technovision.technobot.util.BotRegistry;
 import com.technovision.technobot.util.ImageProcessor;
 import net.dv8tion.jda.api.JDA;
@@ -66,6 +67,7 @@ public class TechnoBot {
      * @throws LoginException Malformed bot token.
      */
     public TechnoBot() throws LoginException, InterruptedException {
+        BotLocalization.init();
         registry = new BotRegistry();
 
         MongoClientURI clientURI = new MongoClientURI(getBotConfig().getJson().getString("mongo-client-uri"));

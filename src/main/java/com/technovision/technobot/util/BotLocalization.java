@@ -38,6 +38,7 @@ public class BotLocalization {
 
         if (!languages.containsKey("en_us")) languages.put("en_us", getEnglishDefaults());
 
+        // CHANGE METHOD ARGUMENT TO CHANGE LANGUAGE
         if(!setLanguage("en_us")) {
             System.out.println("Failed to set language!");
         }

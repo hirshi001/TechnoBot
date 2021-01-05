@@ -1,4 +1,4 @@
-package com.technovision.technobot.commands.economy;
+package com.technovision.technobot.commands.fun;
 
 
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;

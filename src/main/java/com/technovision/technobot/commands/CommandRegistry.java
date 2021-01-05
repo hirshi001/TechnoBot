@@ -4,6 +4,7 @@ import com.technovision.technobot.TechnoBot;
 import com.technovision.technobot.commands.economy.*;
 import com.technovision.technobot.commands.fun.CommandRoll;
 import com.technovision.technobot.commands.fun.CommandSay;
+import com.technovision.technobot.commands.fun.rockpaperscissors.CommandRockPaperScissors;
 import com.technovision.technobot.commands.levels.CommandLeaderboard;
 import com.technovision.technobot.commands.levels.CommandRank;
 import com.technovision.technobot.commands.levels.CommandRankcard;
@@ -96,6 +97,7 @@ public class CommandRegistry {
                 new CommandTicketSettings(bot),
 
                 // Fun
+                new CommandRockPaperScissors(bot),
                 new CommandSay(bot),
                 new CommandRoll(bot)
         );

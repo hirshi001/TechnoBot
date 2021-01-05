@@ -1,32 +1,26 @@
-package com.technovision.technobot.commands.fun;
-
+package com.technovision.technobot.commands.fun.rockpaperscissors;
 
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
-import com.jagrosh.jdautilities.doc.standard.CommandInfo;
 import com.technovision.technobot.TechnoBot;
 import com.technovision.technobot.commands.Command;
-import com.technovision.technobot.listeners.managers.EconManager;
-import com.technovision.technobot.util.exceptions.InvalidBalanceException;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
-import org.json.JSONObject;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Predicate;
 
 
 public class CommandRockPaperScissors extends Command {
 
-    private EventWaiter ew;
-    private Set<Long> players = new HashSet<>();
+    public static final Set<Long> PLAYERS = new HashSet<>();
+    private static final EventWaiter EVENT_WAITER = new EventWaiter();
 
     public CommandRockPaperScissors(@NotNull TechnoBot bot) {
         super(bot, "rps", "a rock paper scissors game", "{prefix}rps", Category.FUN);
-        ew = new EventWaiter();
-        bot.getJDA().addEventListener(ew);
     }
 
 
@@ -36,16 +30,16 @@ public class CommandRockPaperScissors extends Command {
         final long userId = event.getAuthor().getIdLong();
         final long channelId = event.getChannel().getIdLong();
 
-        if(players.contains(userId)) return false;
-        players.add(userId);
+        if (PLAYERS.contains(userId)) return false;
+        PLAYERS.add(userId);
         EmbedBuilder embed = new EmbedBuilder();
         embed.setAuthor(event.getAuthor().getAsTag(), null, event.getAuthor().getAvatarUrl());
         embed.setDescription("Choose either rock, paper, or scissors");
 
-        final int systemChoice = (int)(Math.random()*3)+1; //1=rock, 2=paper, 0=3=scissors
 
-        ew.waitForEvent(MessageReceivedEvent.class, messageReceivedEvent -> players.contains(event.getAuthor().getIdLong()) && channelId==messageReceivedEvent.getChannel().getIdLong(),
+        EVENT_WAITER.waitForEvent(MessageReceivedEvent.class, messageReceivedEvent -> PLAYERS.contains(event.getAuthor().getIdLong()) && channelId==messageReceivedEvent.getChannel().getIdLong(),
             (messageReceivedEvent) -> {
+                int systemChoice = ThreadLocalRandom.current().nextInt(1,4); //1=rock, 2=paper, 0=3=scissors
                 String msg;
                 switch(messageReceivedEvent.getMessage().getContentRaw().toLowerCase()){
                     case "rock":
@@ -60,9 +54,9 @@ public class CommandRockPaperScissors extends Command {
                     default:
                         msg = "Incorrect input";
                 }
-                players.remove(userId);
+                PLAYERS.remove(userId);
                 event.getChannel().sendMessage(msg).queue();
-        }, 10, TimeUnit.SECONDS, ()-> players.remove(userId));
+        }, 10, TimeUnit.SECONDS, ()-> PLAYERS.remove(userId));
 
         event.getChannel().sendMessage(embed.build()).queue();
         return true;
@@ -87,7 +81,7 @@ public class CommandRockPaperScissors extends Command {
             case 1:
                 return "You won!";
             default:
-                return "Soemthing went wrong";
+                return "Something went wrong";
         }
     }
 

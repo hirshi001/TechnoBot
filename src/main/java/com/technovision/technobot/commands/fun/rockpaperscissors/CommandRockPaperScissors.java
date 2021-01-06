@@ -1,65 +1,75 @@
 package com.technovision.technobot.commands.fun.rockpaperscissors;
 
-import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import com.technovision.technobot.TechnoBot;
 import com.technovision.technobot.commands.Command;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.awt.Color;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.concurrent.TimeUnit;
 
-
+/**
+ * RockPaperScissors command
+ * Created by hirshi001
+ */
 public class CommandRockPaperScissors extends Command {
 
-    public static final Set<Long> PLAYERS = new HashSet<>();
-    private static final EventWaiter EVENT_WAITER = new EventWaiter();
+    private static final String[] CHOICES = new String[]{"rock", "paper", "scissors"};
 
     public CommandRockPaperScissors(@NotNull TechnoBot bot) {
-        super(bot, "rps", "a rock paper scissors game", "{prefix}rps", Category.FUN);
+        super(bot, "rps", "a rock paper scissors game", "{prefix}rps <move>", Category.FUN);
     }
-
 
     @Override
     public boolean execute(final MessageReceivedEvent event, String[] args) {
 
-        final long userId = event.getAuthor().getIdLong();
-        final long channelId = event.getChannel().getIdLong();
+        if(args.length>0){
+            String playerChoice = args[0].toLowerCase();
+            String msg;
+            int systemChoice = ThreadLocalRandom.current().nextInt(0,3);
 
-        if (PLAYERS.contains(userId)) return false;
-        PLAYERS.add(userId);
-        EmbedBuilder embed = new EmbedBuilder();
-        embed.setAuthor(event.getAuthor().getAsTag(), null, event.getAuthor().getAvatarUrl());
-        embed.setDescription("Choose either rock, paper, or scissors");
+            switch(playerChoice){
+                case "rock":
+                    msg = output(test(1, systemChoice));
+                    break;
+                case "paper":
+                    msg = output(test(2, systemChoice));
+                    break;
+                case "scissors":
+                    msg = output(test(0, systemChoice));
+                    break;
+                default: //Invalid Arguments
+                    event.getChannel().sendMessage(defaultErrorMessage(event)).queue();
+                    return true;
+            }
+            EmbedBuilder eb = new EmbedBuilder();
+            eb.setColor(Color.BLACK);
+            eb.setAuthor(event.getAuthor().getAsTag(), null, event.getAuthor().getEffectiveAvatarUrl());
+            eb.setDescription(msg + "\nYou picked " + playerChoice +"!\nThe computer picked " + getChoice(systemChoice) + ".");
 
-
-        EVENT_WAITER.waitForEvent(MessageReceivedEvent.class, messageReceivedEvent -> PLAYERS.contains(event.getAuthor().getIdLong()) && channelId==messageReceivedEvent.getChannel().getIdLong(),
-            (messageReceivedEvent) -> {
-                int systemChoice = ThreadLocalRandom.current().nextInt(1,4); //1=rock, 2=paper, 0=3=scissors
-                String msg;
-                switch(messageReceivedEvent.getMessage().getContentRaw().toLowerCase()){
-                    case "rock":
-                        msg = output(test(1, systemChoice));
-                        break;
-                    case "paper":
-                        msg = output(test(2, systemChoice));
-                        break;
-                    case "scissors":
-                        msg = output(test(0, systemChoice));
-                        break;
-                    default:
-                        msg = "Incorrect input";
-                }
-                PLAYERS.remove(userId);
-                event.getChannel().sendMessage(msg).queue();
-        }, 10, TimeUnit.SECONDS, ()-> PLAYERS.remove(userId));
-
-        event.getChannel().sendMessage(embed.build()).queue();
+        }
+        //No Arguments Provided
+        else{
+            event.getChannel().sendMessage(defaultErrorMessage(event)).queue();
+        }
         return true;
+    }
+
+    private static String getChoice(int choice){
+        return CHOICES[choice];
+    }
+
+
+    private MessageEmbed defaultErrorMessage(MessageReceivedEvent event){
+        return new EmbedBuilder()
+                .setColor(Command.ERROR_EMBED_COLOR)
+                .setAuthor(event.getAuthor().getAsTag(), null, event.getAuthor().getEffectiveAvatarUrl())
+                .setDescription(":x: Invalid argument provided.\n\nUsage:\n`"+Command.PREFIX+this.name+" <move>`")
+                .addField("Note","`<move>` should be `rock`, `paper`, or `scissors`", true)
+                .addField("Example", Command.PREFIX+this.name+" paper", true)
+                .build();
     }
 
     /**

@@ -48,7 +48,7 @@ public class CommandRockPaperScissors extends Command {
             eb.setColor(Color.BLACK);
             eb.setAuthor(event.getAuthor().getAsTag(), null, event.getAuthor().getEffectiveAvatarUrl());
             eb.setDescription(msg + "\nYou picked " + playerChoice +"!\nThe computer picked " + getChoice(systemChoice) + ".");
-
+            event.getChannel().sendMessage(eb.build()).queue();
         }
         //No Arguments Provided
         else{

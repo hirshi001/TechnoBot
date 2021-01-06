@@ -1,4 +1,4 @@
-package com.technovision.technobot.commands.fun.rockpaperscissors;
+package com.technovision.technobot.commands.fun;
 
 import com.technovision.technobot.TechnoBot;
 import com.technovision.technobot.commands.Command;

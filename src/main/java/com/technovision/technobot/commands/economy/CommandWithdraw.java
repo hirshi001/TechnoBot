@@ -40,7 +40,7 @@ public class CommandWithdraw extends Command {
                     return true;
                 }
             } catch (NumberFormatException e) {
-                if (args[0].equalsIgnoreCase("all") || args[0].equalsIgnoreCase("half")) {
+                if ("all".equalsIgnoreCase(args[0]) || "half".equalsIgnoreCase(args[0])) {
                     String amount = args[0];
 
                     try {

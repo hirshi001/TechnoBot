@@ -48,7 +48,7 @@ public class EconManager {
     }
 
     public void deposit(User user, String amount) throws InvalidBalanceException {
-        if (amount.equalsIgnoreCase("all")) {
+        if ("all".equalsIgnoreCase(amount)) {
             JSONObject profile = getProfile(user);
             long bal = profile.getLong("balance");
             long newBalance = 0;
@@ -61,7 +61,7 @@ public class EconManager {
 
             profile.put("bank", bank + bal);
             profile.put("balance", newBalance);
-        } else if (amount.equalsIgnoreCase("half")) {
+        } else if ("half".equalsIgnoreCase(amount)) {
             JSONObject profile = getProfile(user);
             long bal = profile.getLong("balance");
             long newBalance = bal - (bal / 2);
@@ -93,7 +93,7 @@ public class EconManager {
     }
 
     public void withdraw(User user, String amount) throws InvalidBalanceException {
-        if (amount.equalsIgnoreCase("all")) {
+        if ("all".equalsIgnoreCase(amount)) {
             JSONObject profile = getProfile(user);
 
             long bank = profile.getLong("bank");
@@ -106,7 +106,7 @@ public class EconManager {
             profile.put("bank", newBank);
             profile.put("balance", bank);
 
-        } else if (amount.equalsIgnoreCase("half")) {
+        } else if ("half".equalsIgnoreCase(amount)) {
             JSONObject profile = getProfile(user);
 
             long bank = profile.getLong("bank");

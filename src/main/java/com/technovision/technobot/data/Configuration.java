@@ -71,7 +71,7 @@ public class Configuration implements DataSave {
             jsonStr.append("{}");
         }
 
-        if (jsonStr.toString().equalsIgnoreCase("")) jsonStr.append("{}");
+        if ("".equalsIgnoreCase(jsonStr.toString())) jsonStr.append("{}");
 
         json = new JSONObject(jsonStr.toString());
     }

@@ -25,7 +25,7 @@ public class CommandTicketSettings extends Command {
                         .build()
                 ).queue();
             } else {
-                if (args[0].equalsIgnoreCase("inbox-channel")) {
+                if ("inbox-channel".equalsIgnoreCase(args[0])) {
                     try {
                         bot.getTicketManager().setInboxChannel(event.getGuild(), event.getGuild().getTextChannelsByName(args[1], true).get(0));
                         event.getChannel().sendMessage("📨 Successfully set the channel!").queue();

@@ -3,6 +3,8 @@ package com.technovision.technobot.commands.levels;
 import com.google.common.collect.Sets;
 import com.technovision.technobot.TechnoBot;
 import com.technovision.technobot.commands.Command;
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.bson.Document;
@@ -91,7 +93,7 @@ public class CommandRankcard extends Command {
                 case "BACKGROUND":
                     if (args.length > 1) {
                         try {
-                            URL url = new URL(args[1]);
+                            URL url = Urls.create(args[1], Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
                             BufferedImage test = ImageIO.read(url);
                             test.getWidth();
                             updates.add(new Document("$set", new Document("background", args[1])));

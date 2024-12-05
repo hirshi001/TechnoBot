@@ -1,5 +1,7 @@
 package com.technovision.technobot.util;
 
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import net.dv8tion.jda.api.entities.User;
 
 import javax.imageio.ImageIO;
@@ -20,7 +22,7 @@ public class ImageProcessor {
 
     public static BufferedImage getAvatar(User user) throws IOException {
         try {
-            URL url = new URL(user.getAvatarUrl());
+            URL url = Urls.create(user.getAvatarUrl(), Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
             BufferedImage addon = ImageIO.read(url);
 
             int w = addon.getWidth() + 80;
@@ -36,7 +38,7 @@ public class ImageProcessor {
             return scaleOp.filter(addon, after);
 
         } catch (MalformedURLException e) {
-            URL url = new URL(user.getEffectiveAvatarUrl());
+            URL url = Urls.create(user.getEffectiveAvatarUrl(), Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
             BufferedImage addon = ImageIO.read(url);
 
             int w = addon.getWidth() - 45;

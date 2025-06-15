@@ -3,6 +3,8 @@ package com.technovision.technobot.commands.music;
 import com.google.common.collect.Sets;
 import com.technovision.technobot.TechnoBot;
 import com.technovision.technobot.commands.Command;
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
@@ -30,7 +32,7 @@ public class CommandPlay extends Command {
         try {
             String url;
             try {
-                url = new URL(args[0]).toString();
+                url = Urls.create(args[0], Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS).toString();
             } catch (MalformedURLException e) {
                 StringBuilder keywords = new StringBuilder();
                 for (String word : args) {

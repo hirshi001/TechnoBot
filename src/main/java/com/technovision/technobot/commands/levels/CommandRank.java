@@ -4,6 +4,8 @@ import com.google.common.collect.Sets;
 import com.technovision.technobot.TechnoBot;
 import com.technovision.technobot.commands.Command;
 import com.technovision.technobot.util.ImageProcessor;
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -65,7 +67,7 @@ public class CommandRank extends Command {
             if (profile.getString("background").isEmpty()) {
                 background = ImageIO.read(new File("data/images/rankCardBackground.png"));
             } else {
-                background = ImageIO.read(new URL(profile.getString("background")));
+                background = ImageIO.read(Urls.create(profile.getString("background"), Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS));
             }
             BufferedImage rectBuffer = new BufferedImage(base.getWidth(), base.getHeight(), BufferedImage.TYPE_INT_ARGB);
             Graphics2D g2 = rectBuffer.createGraphics();
